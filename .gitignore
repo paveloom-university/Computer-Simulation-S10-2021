@@ -1,0 +1,6 @@
+# Binary files
+**/data
+**/plots
+
+# Rust targets
+**/target
