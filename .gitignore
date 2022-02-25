@@ -4,3 +4,6 @@
 
 # Rust targets
 **/target
+
+# Documentation
+public

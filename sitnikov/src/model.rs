@@ -37,6 +37,7 @@ impl Model {
     }
 }
 
+/// Results of integration
 #[derive(Clone)]
 struct Results {
     /// The position of the third body

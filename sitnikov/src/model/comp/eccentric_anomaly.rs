@@ -1,4 +1,5 @@
-//! This module provides a function for computing the eccentric anomaly
+//! This module provides a function for computing the
+//! [eccentric anomaly](Model#method.eccentric_anomaly)
 
 use anyhow::{Context, Result};
 

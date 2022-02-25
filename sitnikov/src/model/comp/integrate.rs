@@ -1,4 +1,4 @@
-//! This module provides the integration routine
+//! This module provides the [integration](Model#method.integrate) routine
 
 use anyhow::{Context, Result};
 
@@ -6,8 +6,8 @@ use super::super::Model;
 use crate::F;
 
 impl Model {
-    // Define the right-hand side of the original
-    // second-order differential equation
+    /// Compute the right-hand side of the original
+    /// second-order differential equation
     fn rhs(&self, t: F, z: F) -> Result<F> {
         let r = self
             .radius(t)

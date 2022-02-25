@@ -1,9 +1,16 @@
 ### Notices
 
-Git mirrors:
+#### Mirrors
+
+Repository:
 - [Codeberg](https://codeberg.org/paveloom-university/Computer-Simulation-S10-2022)
 - [GitHub](https://github.com/paveloom-university/Computer-Simulation-S10-2022)
 - [GitLab](https://gitlab.com/paveloom-g/university/s10-2022/computer-simulation)
+
+Reference:
+- [sitnikov](sitnikov)
+  - [GitHub](https://paveloom-university.github.io/Computer-Simulation-S10-2022)
+  - [GitLab](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation)
 
 #### KaTeX
 

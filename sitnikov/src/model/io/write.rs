@@ -1,5 +1,6 @@
 //! This module provides a routine for
-//! writing the results in a directory
+//! [writing](Model#method.write) the
+//! results in a directory
 
 use anyhow::{Context, Result};
 use bincode::Options;
