@@ -1,10 +1,10 @@
-//! This module provides a function for computing the
+//! This module provides a method for computing the
 //! [eccentric anomaly](Model#method.eccentric_anomaly)
 
 use anyhow::{Context, Result};
 
 use super::super::Model;
-use super::find_root_newton_raphson::find_root_newton_raphson;
+use super::newton_raphson::newton_raphson;
 use crate::{consts, F};
 
 impl Model {
@@ -21,7 +21,7 @@ impl Model {
             // Define the initial value
             let initial = if self.e > 0.8 { consts::PI } else { m };
             // Use the Newton–Raphson method as a root-finding algorithm
-            find_root_newton_raphson(fun, der, initial).with_context(|| "Couldn't find the root")
+            newton_raphson(fun, der, initial).with_context(|| "Couldn't find the root")
         }
     }
 }

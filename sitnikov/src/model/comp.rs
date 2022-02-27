@@ -1,6 +1,9 @@
 //! This module provides computation routines
 
+mod acceleration;
 mod eccentric_anomaly;
-mod find_root_newton_raphson;
 mod integrate;
+mod leapfrog;
+mod newton_raphson;
 mod radius;
+mod yoshida_4th;

@@ -1,4 +1,4 @@
-//! This module contains an implementation of the Newton-Raphson method
+//! This module provides an implementation of the Newton-Raphson method
 
 use anyhow::{anyhow, Result};
 
@@ -8,7 +8,7 @@ use crate::{F, I};
 const MAX_ITER: I = 5000;
 
 /// Find a root of a continuous function using the Newton-Raphson method
-pub fn find_root_newton_raphson(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Result<F> {
+pub fn newton_raphson(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Result<F> {
     // If the initial value is already a root
     if initial < F::EPSILON {
         Ok(initial)

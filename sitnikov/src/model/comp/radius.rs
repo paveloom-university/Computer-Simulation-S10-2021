@@ -1,4 +1,5 @@
-//! This module provides a function for computing the [radius](Model#method.radius)
+//! This module provides a method for
+//! computing the [radius](Model#method.radius)
 
 use anyhow::{Context, Result};
 
