@@ -1,10 +1,13 @@
 //! This module provides a model of the Sitnikov problem
 
+// Both of these come from the line that defines `n`
+#![allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+
 mod comp;
 mod io;
 
 use crate::cli::Args;
-use crate::{F, I};
+use crate::{consts, F, I};
 
 /// A model of the Sitnikov problem
 #[derive(Clone)]
@@ -31,7 +34,9 @@ impl Model {
             z_0: args.z_0,
             z_v_0: args.z_v_0,
             h: args.h,
-            n: args.n,
+            // Rounded because it's supposed to be
+            // integral because of the time step validator
+            n: (F::from(args.t) * 2. * consts::PI / args.h).round() as I,
             results: Results::new(),
         }
     }

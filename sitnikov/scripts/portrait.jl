@@ -19,16 +19,6 @@ end
 
 # Parse the options
 for i in eachindex(ARGS)
-    # Time step
-    if ARGS[i] == "-h"
-        check_last(i)
-        try
-            global H = parse(F, ARGS[i+1])
-        catch
-            println("Couldn't parse the value of the `-h` argument.")
-            exit(1)
-        end
-    end
     # A postfix for the names of output files
     if ARGS[i] == "--postfix"
         check_last(i)
@@ -42,10 +32,10 @@ for i in eachindex(ARGS)
 end
 
 # Check for required arguments
-if !@isdefined(H) || length(ARGS) == 0
+if length(ARGS) == 0
     println("""
         Usage:
-        julia --project=. scripts/portrait.jl -h <H> [--postfix <POSTFIX>] <INPUT> """
+        julia --project=. scripts/portrait.jl [--postfix <POSTFIX>] <INPUT> """
     )
     exit(1)
 end

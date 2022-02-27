@@ -14,10 +14,10 @@ use crate::{F, I};
 const E_RANGE: Range<F> = 0.0..1.0;
 
 /// Time step is bound by the machine epsilon value
-const T_RANGE: RangeInclusive<F> = F::EPSILON..=1e-1;
+const H_RANGE: RangeInclusive<F> = F::EPSILON..=1e-1;
 
-/// Number of iterations is bound by the largest representable value
-const N_RANGE: RangeInclusive<I> = 1..=I::MAX;
+/// Number of periods (multiple of $ 2 \pi $) is bound by the largest representable value
+const T_RANGE: RangeInclusive<I> = 1..=I::MAX;
 
 /// Initial value of position of the third body is bound by the largest representable value
 const Z_0_RANGE: RangeInclusive<F> = -F::MAX..=F::MAX;
@@ -41,12 +41,12 @@ pub struct Args {
     /// Initial value of velocity of the third body
     #[clap(short = 'v', help_heading = "MODEL", default_value_t = 0., validator = validate_z_v_0)]
     pub z_v_0: F,
-    /// Time step
-    #[clap(short, help_heading = "INTEGRATION", default_value_t = 1e-2, validator = validate_t)]
+    /// Time step (multiple of $ \pi / 2 $)
+    #[clap(short, help_heading = "INTEGRATION", default_value_t = 1e-2, validator = validate_h)]
     pub h: F,
-    /// Number of iterations
-    #[clap(short, help_heading = "INTEGRATION", default_value_t = 100000, validator = validate_n)]
-    pub n: I,
+    /// Number of periods (multiple of $ 2 \pi $)
+    #[clap(short, help_heading = "INTEGRATION", default_value_t = 1000, validator = validate_t)]
+    pub t: I,
 }
 
 /// Parse the arguments
@@ -61,6 +61,26 @@ fn validate_output(s: &str) -> Result<(), String> {
     } else {
         Err("output must be an existing directory".to_string())
     }
+}
+
+/// Check if the time step is valid
+fn validate_h(s: &str) -> Result<(), String> {
+    F::from_str(s)
+        .map_err(|_| "Couldn't parse the argument `h`".to_string())
+        .and_then(|h| {
+            if H_RANGE.contains(&h) {
+                let a = 4. / h;
+                let b = (4. / h).round();
+                if (a - b).abs() < F::EPSILON {
+                    Ok(())
+                } else {
+                    Err("time step is incorrect; ".to_string()
+                        + "make sure that the expression `4 / h` gives an integral value")
+                }
+            } else {
+                Err(format!("time step is not in the range `{:?}`", H_RANGE))
+            }
+        })
 }
 
 /// Create a validator for an argument
@@ -93,5 +113,4 @@ macro_rules! validator {
 validator!(e, F, "eccentricity");
 validator!(z_0, F, "initial value of position of the third body");
 validator!(z_v_0, F, "initial value of velocity of the third body");
-validator!(t, F, "time step");
-validator!(n, I, "number of iterations");
+validator!(t, I, "number of periods");
