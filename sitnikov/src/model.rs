@@ -7,7 +7,7 @@ mod comp;
 mod io;
 
 use crate::cli::Args;
-use crate::{consts, F, I};
+use crate::{F, I};
 
 /// A model of the Sitnikov problem
 #[derive(Clone)]
@@ -34,9 +34,9 @@ impl Model {
             z_0: args.z_0,
             z_v_0: args.z_v_0,
             h: args.h,
-            // Rounded because it's supposed to be
-            // integral because of the time step validator
-            n: (F::from(args.t) * 2. * consts::PI / args.h).round() as I,
+            // Rounded (just in case) because it's supposed to
+            // be integral because of the time step validator
+            n: (F::from(args.t) * 4. / args.h).round() as I,
             results: Results::new(),
         }
     }

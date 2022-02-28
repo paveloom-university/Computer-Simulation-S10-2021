@@ -1,4 +1,4 @@
-# This is a Julia script for plotting the phase space portrait
+# This is a Julia script for plotting the Poincaré map
 
 # Define the floating point type used across the script
 F = Float64
@@ -8,6 +8,7 @@ I = UInt64
 
 # Define default values for optional arguments
 POSTFIX = ""
+T = 1000
 
 "Check if the value of the option is the last argument"
 function check_last(i)
@@ -19,6 +20,16 @@ end
 
 # Parse the options
 for i in eachindex(ARGS)
+    # Number of periods
+    if ARGS[i] == "-t"
+        check_last(i)
+        try
+            global T = parse(F, ARGS[i+1])
+        catch
+            println("Couldn't parse the value of the `-t` argument.")
+            exit(1)
+        end
+    end
     # A postfix for the names of output files
     if ARGS[i] == "--postfix"
         check_last(i)
@@ -35,7 +46,7 @@ end
 if length(ARGS) == 0
     println("""
         Usage:
-        julia --project=. scripts/portrait.jl [--postfix <POSTFIX>] <INPUT> """
+        julia --project=. scripts/map.jl [-t <T>] [--postfix <POSTFIX>] <INPUT> """
     )
     exit(1)
 end
@@ -76,11 +87,14 @@ function read_bincode(path::AbstractString)::Tuple{I, Vector{F}}
     end
 end
 
-# Plot the phase space portrait if the corresponding data files exist
+# Plot the Poincaré map if the corresponding data files exist
 if isfile(z_path) && isfile(z_v_path)
     # Read the data
     nz, z = read_bincode(z_path)
     nzv, z_v = read_bincode(z_v_path)
+
+    # Compute the number of points per period
+    np = UInt((nz - 1) / T)
 
     # Check if the lengths match
     if nz != nzv
@@ -88,25 +102,23 @@ if isfile(z_path) && isfile(z_v_path)
         return
     end
 
-    println(" "^4, "> Plotting the phase space portrait...")
+    println(" "^4, "> Plotting the Poincaré map...")
 
-    # Plot the phase space portrait
-    p = plot(
-        z[1:10:end],
-        z_v[1:10:end];
+    # Plot the Poincaré map
+    p = scatter(
+        z[1:np:end],
+        z_v[1:np:end];
         label = "",
-        title = "Phase portrait",
+        title = "Poincaré map",
         xlabel = L"z",
         ylabel = L"\dot{z}",
-        size = (400, 400)
+        size = (400, 400),
+        markersize = 0.5,
     )
 
-    # Point out the starting position
-    scatter!(p, [z[1],], [z_v[1],]; label = "")
-
     # Save the figure as PDF and PNG
-    savefig(p, joinpath(OUTPUT_DIR, "Phase portrait$(POSTFIX).pdf"))
-    savefig(p, joinpath(OUTPUT_DIR, "Phase portrait$(POSTFIX).png"))
+    savefig(p, joinpath(OUTPUT_DIR, "Poincaré map$(POSTFIX).pdf"))
+    savefig(p, joinpath(OUTPUT_DIR, "Poincaré map$(POSTFIX).png"))
 end
 
 println()

@@ -22,7 +22,7 @@ pub fn newton_raphson(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Res
             // Compute the next point
             let x_2 = x_1 - f / d;
             // Check if the last two points are close enough
-            if (x_1 - x_2).abs() < F::EPSILON {
+            if (x_1 - x_2).abs() < F::EPSILON * 10. {
                 return Ok(x_2);
             }
             // If not, repeat
