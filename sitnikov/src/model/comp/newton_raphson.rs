@@ -1,16 +1,18 @@
 //! This module provides an implementation of the Newton-Raphson method
 
 use anyhow::{anyhow, Result};
+use numeric_literals::replace_float_literals;
 
-use crate::{F, I};
+use crate::Float;
 
 /// Maximum number of iterations
-const MAX_ITER: I = 5000;
+const MAX_ITER: u16 = 5000;
 
 /// Find a root of a continuous function using the Newton-Raphson method
-pub fn newton_raphson(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Result<F> {
+#[replace_float_literals(F::from(literal).unwrap())]
+pub fn newton_raphson<F: Float>(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Result<F> {
     // If the initial value is already a root
-    if initial < F::EPSILON {
+    if initial < F::epsilon() {
         Ok(initial)
     // Otherwise,
     } else {
@@ -22,7 +24,7 @@ pub fn newton_raphson(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Res
             // Compute the next point
             let x_2 = x_1 - f / d;
             // Check if the last two points are close enough
-            if (x_1 - x_2).abs() < F::EPSILON * 10. {
+            if (x_1 - x_2).abs() < F::epsilon() * 10. {
                 return Ok(x_2);
             }
             // If not, repeat

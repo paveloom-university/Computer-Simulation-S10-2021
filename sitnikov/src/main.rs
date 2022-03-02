@@ -5,24 +5,34 @@ mod cli;
 mod model;
 
 use anyhow::{Context, Result};
+use num::{traits::FloatConst, Float as NumFloat, NumCast};
+use serde::Serialize;
 
-/// Some of the basic mathematical constants
-mod consts {
-    pub use std::f64::consts::PI;
+use std::fmt::{Debug, Display};
+use std::num::ParseFloatError;
+use std::str::FromStr;
+
+/// A general trait for all floating point type numbers
+pub trait Float:
+    Copy
+    + Debug
+    + Display
+    + FloatConst
+    + FromStr<Err = ParseFloatError>
+    + NumCast
+    + NumFloat
+    + Serialize
+{
 }
-
-/// The floating point type used across the program
-type F = f64;
-
-/// The integer type used across the program
-type I = u32;
+impl Float for f32 {}
+impl Float for f64 {}
 
 /// Run the program
 fn main() -> Result<()> {
     // Parse the arguments
     let args = cli::parse();
     // Create a model
-    let mut model = model::Model::from(&args);
+    let mut model = model::Model::<f64>::from(&args);
     // Integrate the equations of motion
     model
         .integrate()

@@ -3,11 +3,13 @@
 //! [Yoshida](Model#method.yoshida_4th) method
 
 use anyhow::{Context, Result};
+use numeric_literals::replace_float_literals;
 
 use super::super::Model;
-use crate::F;
+use crate::Float;
 
-impl Model {
+#[replace_float_literals(F::from(literal).unwrap())]
+impl<F: Float> Model<F> {
     /// Do a one-step integration using the 4th-order Yoshida method
     pub fn yoshida_4th(&self, t: F, z: F, z_v: F) -> Result<(F, F)> {
         let d_1 = 1. / (2. - F::exp(F::ln(2.) / 3.));

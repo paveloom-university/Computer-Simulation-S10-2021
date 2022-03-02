@@ -92,8 +92,8 @@ if isfile(z_path) && isfile(z_v_path)
 
     # Plot the phase space portrait
     p = plot(
-        z[1:10:end],
-        z_v[1:10:end];
+        z[1:end],
+        z_v[1:end];
         label = "",
         title = "Phase portrait",
         xlabel = L"z",

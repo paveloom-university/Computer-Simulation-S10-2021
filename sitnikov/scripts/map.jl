@@ -8,7 +8,7 @@ I = UInt64
 
 # Define default values for optional arguments
 POSTFIX = ""
-T = 1000
+T = 10
 
 "Check if the value of the option is the last argument"
 function check_last(i)
@@ -69,7 +69,7 @@ default(fontfamily = "Computer Modern", dpi = 300, legend = :topright)
 CURRENT_DIR = @__DIR__
 ROOT_DIR = basename(CURRENT_DIR) == "scripts" ? dirname(CURRENT_DIR) : CURRENT_DIR
 PLOTS_DIR = joinpath(ROOT_DIR, "plots")
-OUTPUT_DIR = joinpath(PLOTS_DIR, "portrait")
+OUTPUT_DIR = joinpath(PLOTS_DIR, "map")
 
 # Make sure the needed directories exist
 mkpath(OUTPUT_DIR)
