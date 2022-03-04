@@ -27,19 +27,41 @@ pub struct Model<F: Float> {
 
 #[replace_float_literals(F::from(literal).unwrap())]
 impl<F: Float> Model<F> {
-    /// Initialize a model
+    /// Initialize a model from arguments
     pub fn from(args: &Args<F>) -> Self {
         Self {
             e: args.e,
             z_0: args.z_0,
             z_v_0: args.z_v_0,
-            h: args.h * F::PI() / 2.,
+            h: args.h * F::FRAC_PI_2(),
             // Rounded (just in case) because it's supposed to
             // be integral because of the time step validator
-            n: F::round(F::from(args.t).unwrap() * 4. / args.h)
+            n: (F::from(args.t).unwrap() * 4. / args.h)
+                .round()
                 .to_usize()
                 .unwrap(),
             results: Results::new(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    //! This module provides methods for the tests
+    use super::*;
+    #[replace_float_literals(F::from(literal).unwrap())]
+    impl<F: Float> Model<F> {
+        /// Initialize a model with default values set for tests
+        pub fn test() -> Self {
+            let h = 1e-2;
+            Self {
+                e: 0.,
+                z_0: 1.,
+                z_v_0: 0.,
+                h: h * F::FRAC_PI_2(),
+                n: (1000. * 4. / h).round().to_usize().unwrap(),
+                results: Results::new(),
+            }
         }
     }
 }

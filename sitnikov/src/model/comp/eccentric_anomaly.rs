@@ -27,3 +27,92 @@ impl<F: Float> Model<F> {
         }
     }
 }
+
+#[test]
+fn test_circular_case() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize a test model
+    let model = Model::<f64>::test();
+
+    // Compute the eccentric anomaly
+    let e = model.eccentric_anomaly(1.0)?;
+
+    // Compare to the known result
+    if (e - 1.).abs() >= f64::EPSILON {
+        return Err(anyhow!(
+            "The value of the eccentric anomaly is incorrect (radians): 1.0 vs {e}"
+        ));
+    };
+
+    Ok(())
+}
+
+#[test]
+fn test_elliptic_case_small_e() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize a test model
+    let mut model = Model::<f64>::test();
+    model.e = 0.00001;
+
+    // Compute the eccentric anomaly
+    let m = std::f64::consts::FRAC_PI_6;
+    let e_a = model.eccentric_anomaly(m)?;
+
+    // Compare to the known result
+    let e_a_0 = 0.523_603_8;
+    if (e_a - e_a_0).abs() >= 1e-7 {
+        return Err(anyhow!(
+            "The value of the eccentric anomaly is incorrect (radians): {e_a_0} vs {e_a}"
+        ));
+    };
+
+    Ok(())
+}
+
+#[test]
+fn test_elliptic_case_moderate_e() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize a test model
+    let mut model = Model::<f64>::test();
+    model.e = 0.6;
+
+    // Compute the eccentric anomaly
+    let m = std::f64::consts::FRAC_PI_2;
+    let e_a = model.eccentric_anomaly(m)?.to_degrees();
+
+    // Compare to the known result
+    let e_a_0 = 119.824_323_327_144_34;
+    if (e_a - e_a_0).abs() >= f64::EPSILON {
+        return Err(anyhow!(
+            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs {e_a}"
+        ));
+    };
+
+    Ok(())
+}
+
+#[test]
+fn test_elliptic_case_big_e() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize a test model
+    let mut model = Model::<f64>::test();
+    model.e = 0.9;
+
+    // Compute the eccentric anomaly
+    let m = 3. * std::f64::consts::FRAC_PI_2;
+    let e_a = model.eccentric_anomaly(m)?.to_degrees();
+
+    // Compare to the known result
+    let e_a_0 = 230.315_867_119_592_8;
+    if (e_a - e_a_0).abs() >= f64::EPSILON {
+        return Err(anyhow!(
+            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs {e_a}"
+        ));
+    };
+
+    Ok(())
+}

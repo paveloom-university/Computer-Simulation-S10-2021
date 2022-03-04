@@ -12,6 +12,10 @@ Reference:
   - [GitHub](https://paveloom-university.github.io/Computer-Simulation-S10-2022)
   - [GitLab](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation)
 
+#### Tests
+
+To run tests, consider using [`nextest`](https://nexte.st/).
+
 #### KaTeX
 
 To build a crate's documentation with [KaTeX](https://katex.org/) support, run:
