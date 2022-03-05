@@ -16,12 +16,12 @@ impl<F: Float> Model<F> {
         self.results.z_v.push(self.z_v_0);
         // Integrate the system of ordinary differential
         // equations using the 4th-order Yoshida algorithm
-        for i in 1..=self.n {
+        for i in 0..self.n {
             // Compute the time moment
             let t = F::from(i).unwrap() * self.h;
             // Compute the next pair
             let (z, z_v) = self
-                .yoshida_4th(t, self.results.z[i - 1], self.results.z_v[i - 1])
+                .yoshida_4th(t, self.results.z[i], self.results.z_v[i], self.h)
                 .with_context(|| "Couldn't compute the next pair of values")?;
             // Push the results
             self.results.z.push(z);

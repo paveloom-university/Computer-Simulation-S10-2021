@@ -22,3 +22,50 @@ impl<F: Float> Model<F> {
         Ok((z, z_v))
     }
 }
+
+#[test]
+fn test_time_reversibility() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize a test model
+    let mut model = Model::<f64>::test();
+    model.e = 0.6;
+    model.h = 1e-6;
+
+    // Define the number of integrations
+    let n = 1000;
+
+    // Put initial values in value holders
+    let mut z = model.z_0;
+    let mut z_v = model.z_v_0;
+
+    // Integrate forward `n` times and then backward `n` times
+    for i in 0..2 * n {
+        // Compute the time moment
+        let t = if i <= n {
+            f64::from(i)
+        } else {
+            f64::from(2 * n - i)
+        } * model.h;
+        // Compute the step
+        let h = if i < n { model.h } else { -model.h };
+        // Compute the next pair of values
+        (z, z_v) = model.leapfrog(t, z, z_v, h)?;
+    }
+
+    // Compare the results with the initial values
+    if (z - model.z_0).abs() >= model.h.powi(2) {
+        return Err(anyhow!(
+            "The value of the position isn't the same: {} vs. {z}",
+            model.z_0
+        ));
+    }
+    if (z_v - model.z_v_0).abs() >= model.h.powi(2) {
+        return Err(anyhow!(
+            "The value of the velocity isn't the same: {} vs. {z_v}",
+            model.z_v_0
+        ));
+    }
+
+    Ok(())
+}

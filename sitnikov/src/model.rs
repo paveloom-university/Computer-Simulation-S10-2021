@@ -46,22 +46,18 @@ impl<F: Float> Model<F> {
 }
 
 #[cfg(test)]
-mod tests {
-    //! This module provides methods for the tests
-    use super::*;
-    #[replace_float_literals(F::from(literal).unwrap())]
-    impl<F: Float> Model<F> {
-        /// Initialize a model with default values set for tests
-        pub fn test() -> Self {
-            let h = 1e-2;
-            Self {
-                e: 0.,
-                z_0: 1.,
-                z_v_0: 0.,
-                h: h * F::FRAC_PI_2(),
-                n: (1000. * 4. / h).round().to_usize().unwrap(),
-                results: Results::new(),
-            }
+#[replace_float_literals(F::from(literal).unwrap())]
+impl<F: Float> Model<F> {
+    /// Initialize a model with default values set for tests
+    pub fn test() -> Self {
+        let h = 1e-2;
+        Self {
+            e: 0.,
+            z_0: 1.,
+            z_v_0: 0.,
+            h: h * F::FRAC_PI_2(),
+            n: (1000. * 4. / h).round().to_usize().unwrap(),
+            results: Results::new(),
         }
     }
 }
