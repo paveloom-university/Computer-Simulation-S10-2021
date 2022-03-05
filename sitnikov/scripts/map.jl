@@ -8,7 +8,7 @@ I = UInt64
 
 # Define default values for optional arguments
 POSTFIX = ""
-T = 10
+T = 1000
 
 "Check if the value of the option is the last argument"
 function check_last(i)

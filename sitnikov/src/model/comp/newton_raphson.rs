@@ -51,10 +51,10 @@ fn test_find_roots() -> Result<()> {
 
     // Compare to the known results
     if (x_1 + 1.).abs() >= f64::EPSILON * 10. {
-        return Err(anyhow!("The first root is incorrect: -1.0 vs {x_1}"));
+        return Err(anyhow!("The first root is incorrect: -1.0 vs. {x_1}"));
     }
     if (x_2 + 2.).abs() >= f64::EPSILON * 10. {
-        return Err(anyhow!("The second root is incorrect: -2.0 vs {x_2}"));
+        return Err(anyhow!("The second root is incorrect: -2.0 vs. {x_2}"));
     }
 
     Ok(())

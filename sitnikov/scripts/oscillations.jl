@@ -1,4 +1,5 @@
-# This is a Julia script for plotting the phase space portrait
+# This is a Julia script for plotting the
+# orbits that show oscillations (position vs. time)
 
 # Define the floating point type used across the script
 F = Float64
@@ -8,6 +9,7 @@ I = UInt64
 
 # Define default values for optional arguments
 POSTFIX = ""
+H = 0.01
 
 "Check if the value of the option is the last argument"
 function check_last(i)
@@ -19,6 +21,16 @@ end
 
 # Parse the options
 for i in eachindex(ARGS)
+    # Time step
+    if ARGS[i] == "-h"
+        check_last(i)
+        try
+            global H = parse(F, ARGS[i+1])
+        catch
+            println("Couldn't parse the value of the `-h` argument.")
+            exit(1)
+        end
+    end
     # A postfix for the names of output files
     if ARGS[i] == "--postfix"
         check_last(i)
@@ -35,10 +47,13 @@ end
 if length(ARGS) == 0
     println("""
         Usage:
-        julia --project=. scripts/portrait.jl [--postfix <POSTFIX>] <INPUT> """
+        julia --project=. scripts/oscillations.jl [--postfix <POSTFIX>] <INPUT> """
     )
     exit(1)
 end
+
+# Multiply the time step
+H *= π / 2
 
 # Define the input directory
 INPUT_DIR = ARGS[end]
@@ -58,14 +73,13 @@ default(fontfamily = "Computer Modern", dpi = 300, legend = :topright)
 CURRENT_DIR = @__DIR__
 ROOT_DIR = basename(CURRENT_DIR) == "scripts" ? dirname(CURRENT_DIR) : CURRENT_DIR
 PLOTS_DIR = joinpath(ROOT_DIR, "plots")
-OUTPUT_DIR = joinpath(PLOTS_DIR, "portrait")
+OUTPUT_DIR = joinpath(PLOTS_DIR, "oscillations")
 
 # Make sure the needed directories exist
 mkpath(OUTPUT_DIR)
 
 # Define the paths to the binary files
 z_path = joinpath(INPUT_DIR, "z.bin")
-z_v_path = joinpath(INPUT_DIR, "z_v.bin")
 
 "Read binary files in the `bincode` format"
 function read_bincode(path::AbstractString)::Tuple{I, Vector{F}}
@@ -77,36 +91,26 @@ function read_bincode(path::AbstractString)::Tuple{I, Vector{F}}
 end
 
 # Plot the phase space portrait if the corresponding data files exist
-if isfile(z_path) && isfile(z_v_path)
+if isfile(z_path)
     # Read the data
-    nz, z = read_bincode(z_path)
-    nzv, z_v = read_bincode(z_v_path)
+    n, z = read_bincode(z_path)
 
-    # Check if the lengths match
-    if nz != nzv
-        println(" "^4, "> [!] Lengths of the files for positions and velocities don't match")
-        return
-    end
-
-    println(" "^4, "> Plotting the phase space portrait...")
+    println(" "^4, "> Plotting the orbit...")
 
     # Plot the phase space portrait
     p = plot(
-        z,
-        z_v;
+        [ i * H / (2 * π) for i in 0:(n-1) ],
+        z;
         label = "",
-        title = "Phase portrait",
-        xlabel = L"z",
-        ylabel = L"\dot{z}",
-        size = (400, 400)
+        title = "Orbit",
+        xlabel = L"t \; \mathrm{[2 \pi]}",
+        ylabel = L"z",
+        xminorticks = 5,
     )
 
-    # Point out the starting position
-    scatter!(p, [z[1],], [z_v[1],]; label = "")
-
     # Save the figure as PDF and PNG
-    savefig(p, joinpath(OUTPUT_DIR, "Phase portrait$(POSTFIX).pdf"))
-    savefig(p, joinpath(OUTPUT_DIR, "Phase portrait$(POSTFIX).png"))
+    savefig(p, joinpath(OUTPUT_DIR, "Orbit$(POSTFIX).pdf"))
+    savefig(p, joinpath(OUTPUT_DIR, "Orbit$(POSTFIX).png"))
 end
 
 println()

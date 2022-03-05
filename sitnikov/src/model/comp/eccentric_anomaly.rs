@@ -41,7 +41,7 @@ fn test_circular_case() -> Result<()> {
     // Compare to the known result
     if (e - 1.).abs() >= f64::EPSILON {
         return Err(anyhow!(
-            "The value of the eccentric anomaly is incorrect (radians): 1.0 vs {e}"
+            "The value of the eccentric anomaly is incorrect (radians): 1.0 vs. {e}"
         ));
     };
 
@@ -64,7 +64,7 @@ fn test_elliptic_case_small_e() -> Result<()> {
     let e_a_0 = 0.523_603_8;
     if (e_a - e_a_0).abs() >= 1e-7 {
         return Err(anyhow!(
-            "The value of the eccentric anomaly is incorrect (radians): {e_a_0} vs {e_a}"
+            "The value of the eccentric anomaly is incorrect (radians): {e_a_0} vs. {e_a}"
         ));
     };
 
@@ -87,7 +87,7 @@ fn test_elliptic_case_moderate_e() -> Result<()> {
     let e_a_0 = 119.824_323_327_144_34;
     if (e_a - e_a_0).abs() >= f64::EPSILON {
         return Err(anyhow!(
-            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs {e_a}"
+            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs. {e_a}"
         ));
     };
 
@@ -110,7 +110,7 @@ fn test_elliptic_case_big_e() -> Result<()> {
     let e_a_0 = 230.315_867_119_592_8;
     if (e_a - e_a_0).abs() >= f64::EPSILON {
         return Err(anyhow!(
-            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs {e_a}"
+            "The value of the eccentric anomaly is incorrect (degrees): {e_a_0} vs. {e_a}"
         ));
     };
 

@@ -34,7 +34,7 @@ fn test_radius() -> Result<()> {
     let r_0 = 1.298_405_381_130_942_2;
     if (r - r_0).abs() >= f64::EPSILON {
         return Err(anyhow!(
-            "The value of the radius is incorrect: {r_0} vs {r}"
+            "The value of the radius is incorrect: {r_0} vs. {r}"
         ));
     }
 

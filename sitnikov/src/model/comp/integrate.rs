@@ -18,7 +18,7 @@ impl<F: Float> Model<F> {
         // equations using the 4th-order Yoshida algorithm
         for i in 1..=self.n {
             // Compute the time moment
-            let t = self.h * F::from(self.n).unwrap();
+            let t = F::from(i).unwrap() * self.h;
             // Compute the next pair
             let (z, z_v) = self
                 .yoshida_4th(t, self.results.z[i - 1], self.results.z_v[i - 1])
