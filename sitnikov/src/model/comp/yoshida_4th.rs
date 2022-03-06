@@ -53,7 +53,11 @@ impl<F: Float> Model<F> {
             (c_3, d_3, c_1 + c_2 + c_3),
         ] {
             z = z + c * z_v * h;
-            z_v = z_v + d * self.acceleration(t + e * h, z)? * h;
+            z_v = z_v
+                + d * self
+                    .acceleration(t + e * h, z)
+                    .with_context(|| "Couldn't compute the acceleration")?
+                    * h;
         }
 
         z = z + c_4 * z_v * h;
@@ -63,7 +67,60 @@ impl<F: Float> Model<F> {
 }
 
 #[test]
-fn test_compare_implementations() -> Result<()> {
+fn compare_with_leapfrog() -> Result<()> {
+    use anyhow::anyhow;
+
+    // Initialize test models
+    let mut model_1 = Model::<f64>::test();
+    model_1.e = 0.6;
+    model_1.h = 1e-6;
+    let mut model_2 = Model::<f64>::test();
+    model_2.e = 0.6;
+    model_2.h = 1e-3;
+
+    // Define the number of integrations for both models
+    let n_1 = 1_000_000;
+    let n_2 = 1000;
+
+    // Put initial values in value holders
+    let mut z_1 = model_1.z_0;
+    let mut z_v_1 = model_1.z_v_0;
+    let mut z_2 = z_1;
+    let mut z_v_2 = z_v_1;
+
+    // Integrate using the leapfrog method
+    for i in 0..2 * n_1 {
+        // Compute the time moments
+        let t = f64::from(i) * model_1.h;
+        // Compute the next pairs of values
+        (z_1, z_v_1) = model_1.leapfrog(t, z_1, z_v_1, model_1.h)?;
+    }
+
+    // Integrate using the 4th-order Yoshida method
+    for i in 0..2 * n_2 {
+        // Compute the time moments
+        let t = f64::from(i) * model_2.h;
+        // Compute the next pairs of values
+        (z_2, z_v_2) = model_2.yoshida_4th(t, z_2, z_v_2, model_2.h)?;
+    }
+
+    // Compare the results between implementations
+    if (z_1 - z_2).abs() >= model_1.h.powi(2) {
+        return Err(anyhow!(
+            "The value of the position isn't the same: {z_1} vs. {z_2}",
+        ));
+    }
+    if (z_v_1 - z_v_2).abs() >= model_1.h.powi(2) {
+        return Err(anyhow!(
+            "The value of the velocity isn't the same: {z_v_1} vs. {z_v_2}",
+        ));
+    }
+
+    Ok(())
+}
+
+#[test]
+fn compare_implementations() -> Result<()> {
     use anyhow::anyhow;
 
     // Initialize a test model
@@ -84,7 +141,7 @@ fn test_compare_implementations() -> Result<()> {
     for i in 0..2 * n {
         // Compute the time moment
         let t = f64::from(i) * model.h;
-        // Compute the next pair of values
+        // Compute the next pairs of values
         (z_1, z_v_1) = model.yoshida_4th(t, z_1, z_v_1, model.h)?;
         (z_2, z_v_2) = model.yoshida_4th_explicit(t, z_2, z_v_2, model.h)?;
     }
