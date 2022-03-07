@@ -27,6 +27,9 @@ pub trait Float:
 impl Float for f32 {}
 impl Float for f64 {}
 
+/// The biggest floating-point type with implemented [`Float`] trait
+type FloatMax = f64;
+
 /// Run the program
 fn main() -> Result<()> {
     // Parse the arguments
@@ -34,8 +37,9 @@ fn main() -> Result<()> {
     // Create a model
     let mut model = model::Model::<f64>::from(&args);
     // Integrate the equations of motion
+    // using the 4th-order Yoshida algorithm
     model
-        .integrate()
+        .yoshida_4th()
         .with_context(|| "Couldn't integrate the model")?;
     // Write the results
     model

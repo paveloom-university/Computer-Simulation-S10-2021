@@ -13,6 +13,8 @@ use crate::Float;
 pub struct Model<F: Float> {
     /// Eccentricity
     e: F,
+    /// Initial value of time
+    t_0: F,
     /// Initial value of position of the third body
     z_0: F,
     /// Initial value of velocity of the third body
@@ -32,11 +34,12 @@ impl<F: Float> Model<F> {
         Self {
             e: args.e,
             z_0: args.z_0,
+            t_0: args.t_0,
             z_v_0: args.z_v_0,
             h: args.h * F::FRAC_PI_2(),
             // Rounded (just in case) because it's supposed to
             // be integral because of the time step validator
-            n: (F::from(args.t).unwrap() * 4. / args.h)
+            n: (F::from(args.p).unwrap() * 4. / args.h)
                 .round()
                 .to_usize()
                 .unwrap(),
@@ -53,6 +56,7 @@ impl<F: Float> Model<F> {
         let h = 1e-2;
         Self {
             e: 0.,
+            t_0: 0.,
             z_0: 1.,
             z_v_0: 0.,
             h: h * F::FRAC_PI_2(),
