@@ -46,3 +46,24 @@ To kill the daemon run
 ```bash
 ./julia.bash kill
 ```
+
+#### Pluto
+
+This project provides Pluto notebooks. You can interact with them in the web interface:
+
+```bash
+julia --project=. -e "using Pkg; Pkg.instantiate()"
+julia --project=.
+```
+
+```julia
+using Pluto
+Pluto.run()
+```
+
+Alternatively, you can run them as scripts:
+
+```
+julia --project=. -e "using Pkg; Pkg.instantiate()"
+julia --project=. notebooks/pluto/notebook.jl
+```
