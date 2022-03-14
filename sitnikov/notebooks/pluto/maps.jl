@@ -69,28 +69,39 @@ S_STEP = 0.001
 # that is reachable with the specified step
 F_MAX = floor(typemax(Int) - 1000) * S_STEP / 2
 
-# Eccentricity
-E_S = @bind E NumberField(
-    0.0:S_STEP:0.999,
-    default = 0.0,
+@bind params confirm(
+	PlutoUI.combine() do Child
+		md"""
+		Parameters of the model:\
+		``e`` $(Child("e", NumberField(
+		    0.0:S_STEP:0.999,
+		    default = 0.0,
+		)))
+		 ``h \; [\pi / 2]``: $(Child("h", NumberField(
+		    S_STEP:S_STEP:0.1,
+		    default = 0.01,
+		)))
+		 ``P``: $(Child("P", NumberField(
+		    1:1:10000,
+		    default = 1000,
+		)))\
+		``\theta_s`` $(Child("θₛ", Select(
+			[0 => "0", 0.25 => "π / 2", 0.5 => "π", 0.75 => "3 π / 2"],
+			default = 0
+		)))
+		 Limit by x? $(Child("limit", CheckBox(default=false)))
+		$(Child("xl", NumberField(
+		    -100:S_STEP:0,
+		    default = -2.5,
+		)))
+		$(Child("xr", NumberField(
+		    0:S_STEP:100,
+		    default = 2.5,
+		)))\
+		
+		"""
+	end
 )
-
-# Time step
-H_S = @bind H NumberField(
-    S_STEP:S_STEP:0.1,
-    default = 0.01,
-)
-
-# Number of periods
-P_S = @bind P NumberField(
-    1:1:10000,
-    default = 1000,
-)
-
-md"""
-Parameters of the model:\
-``e`` $(E_S) ``h \; [\pi / 2]``: $(H_S) ``P``: $(P_S)
-"""
 end
 
 # ╔═╡ 4fe5044e-4f67-4bb5-afe9-f5f95ac02c78
@@ -121,9 +132,9 @@ for pair in INITIAL_VALUES
     mkpath(plots_problem_dir)
     # Define the arguments
     args = [
-        "-e", E,
-        "-h", H,
-        "-P", P,
+        "-e", params.e,
+        "-h", params.h,
+        "-P", params.P,
         "-p", pair[begin],
         "-v", pair[end],
         "-o", data_problem_dir
@@ -137,12 +148,14 @@ for pair in INITIAL_VALUES
     n, z = read_bincode(z_path)
     _, z_v = read_bincode(z_v_path)
     # Compute the number of points per period
-    np = UInt((n - 1) / P)
+    np = UInt((n - 1) / params.P)
+	# Compute the starting index
+	si = UInt(1 + params.θₛ * np)
     # Plot the figure
     println(" "^4, "> Plotting the Poincaré map for the $pair pair...")
     s = scatter(
-        z[1:np:end],
-        z_v[1:np:end];
+        z[si:np:end],
+        z_v[si:np:end];
         label = "",
         title = "Poincaré map",
         xlabel = L"z",
@@ -156,8 +169,8 @@ for pair in INITIAL_VALUES
     # Plot the data on the gerenal plot
     scatter!(
         p,
-        z[1:np:end],
-        z_v[1:np:end];
+        z[si:np:end],
+        z_v[si:np:end];
         label = "",
         title = "Poincaré map",
         xlabel = L"z",
@@ -165,6 +178,10 @@ for pair in INITIAL_VALUES
         size = (400, 400),
         markersize = 0.5,
     );
+	# Limit by x
+	if params.limit
+		xlims!(params.xl, params.xr)
+	end
 end
 
 # Save the final figure as PDF and PNG
