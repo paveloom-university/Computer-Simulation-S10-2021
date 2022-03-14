@@ -70,37 +70,41 @@ S_STEP = 0.001
 F_MAX = floor(typemax(Int) - 1000) * S_STEP / 2
 
 @bind params confirm(
-	PlutoUI.combine() do Child
-		md"""
-		Parameters of the model:\
-		``e`` $(Child("e", NumberField(
-		    0.0:S_STEP:0.999,
-		    default = 0.0,
-		)))
-		 ``h \; [\pi / 2]``: $(Child("h", NumberField(
-		    S_STEP:S_STEP:0.1,
-		    default = 0.01,
-		)))
-		 ``P``: $(Child("P", NumberField(
-		    1:1:10000,
-		    default = 1000,
-		)))\
-		``\theta_s`` $(Child("θₛ", Select(
-			[0 => "0", 0.25 => "π / 2", 0.5 => "π", 0.75 => "3 π / 2"],
-			default = 0
-		)))
-		 Limit by x? $(Child("limit", CheckBox(default=false)))
-		$(Child("xl", NumberField(
-		    -100:S_STEP:0,
-		    default = -2.5,
-		)))
-		$(Child("xr", NumberField(
-		    0:S_STEP:100,
-		    default = 2.5,
-		)))\
-		
-		"""
-	end
+    PlutoUI.combine() do Child
+        md"""
+        Parameters of the model:\
+        ``e`` $(Child("e", NumberField(
+            0.0:S_STEP:0.999,
+            default = 0.0,
+        )))
+         ``h \; [\pi / 2]``: $(Child("h", NumberField(
+            S_STEP:S_STEP:0.1,
+            default = 0.01,
+        )))
+         ``P``: $(Child("P", NumberField(
+            1:1:10000,
+            default = 1000,
+        )))\
+        ``\tau`` $(Child("τ", Select(
+                [0 => "0", 0.25 => "π / 2", 0.5 => "π", 0.75 => "3 π / 2"],
+                default = 0
+        )))
+         ``\theta_s`` $(Child("θₛ", Select(
+                [0 => "0", 0.25 => "π / 2", 0.5 => "π", 0.75 => "3 π / 2"],
+                default = 0
+        )))
+         Limit by x? $(Child("limit", CheckBox(default=false)))
+        $(Child("xl", NumberField(
+            -100:S_STEP:0,
+            default = -2.5,
+        )))
+        $(Child("xr", NumberField(
+            0:S_STEP:100,
+            default = 2.5,
+        )))\
+
+        """
+    end
 )
 end
 
@@ -134,6 +138,7 @@ for pair in INITIAL_VALUES
     args = [
         "-e", params.e,
         "-h", params.h,
+                "-t", params.τ,
         "-P", params.P,
         "-p", pair[begin],
         "-v", pair[end],
@@ -149,8 +154,8 @@ for pair in INITIAL_VALUES
     _, z_v = read_bincode(z_v_path)
     # Compute the number of points per period
     np = UInt((n - 1) / params.P)
-	# Compute the starting index
-	si = UInt(1 + params.θₛ * np)
+        # Compute the starting index
+        si = UInt(1 + params.θₛ * np)
     # Plot the figure
     println(" "^4, "> Plotting the Poincaré map for the $pair pair...")
     s = scatter(
@@ -178,10 +183,10 @@ for pair in INITIAL_VALUES
         size = (400, 400),
         markersize = 0.5,
     );
-	# Limit by x
-	if params.limit
-		xlims!(params.xl, params.xr)
-	end
+    # Limit by x
+    if params.limit
+            xlims!(params.xl, params.xr)
+    end
 end
 
 # Save the final figure as PDF and PNG

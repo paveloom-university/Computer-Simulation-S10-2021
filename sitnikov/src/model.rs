@@ -13,6 +13,8 @@ use crate::Float;
 pub struct Model<F: Float> {
     /// Eccentricity
     e: F,
+    /// Time at the pericenter
+    tau: F,
     /// Initial value of time
     t_0: F,
     /// Initial value of position of the third body
@@ -33,6 +35,7 @@ impl<F: Float> Model<F> {
     pub fn from(args: &Args<F>) -> Self {
         Self {
             e: args.e,
+            tau: args.tau * 2. * F::PI(),
             z_0: args.z_0,
             t_0: args.t_0,
             z_v_0: args.z_v_0,
@@ -56,6 +59,7 @@ impl<F: Float> Model<F> {
         let h = 1e-2;
         Self {
             e: 0.,
+            tau: 0.,
             t_0: 0.,
             z_0: 1.,
             z_v_0: 0.,

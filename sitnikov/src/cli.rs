@@ -20,6 +20,9 @@ pub struct Args<F: 'static + Float> {
     /// Eccentricity
     #[clap(short, help_heading = "MODEL", default_value = "0.0", validator = Self::validate_e)]
     pub e: F,
+    /// Time at the pericenter (a fraction of $ 2 \pi $)
+    #[clap(short, help_heading = "MODEL", default_value = "0.0", validator = Self::validate_tau)]
+    pub tau: F,
     /// Initial value of time
     #[clap(short = 'a', help_heading = "MODEL", default_value = "1.0", validator = Self::validate_t_0)]
     pub t_0: F,
@@ -94,6 +97,7 @@ impl<F: 'static + Float> Args<F> {
     }
 
     validator!(e, F, 0.0..1.0, "eccentricity");
+    validator!(tau, F, 0.0..1.0, "time at the pericenter");
     validator!(
         t_0,
         F,

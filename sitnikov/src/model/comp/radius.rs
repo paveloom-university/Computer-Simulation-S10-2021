@@ -13,7 +13,7 @@ impl<F: Float> Model<F> {
     /// of the primary bodies) from the eccentricity and time
     pub fn radius(&self, t: F) -> Result<F> {
         let e_a = self
-            .eccentric_anomaly(t % (2. * F::PI()))
+            .eccentric_anomaly(t % (2. * F::PI()) - self.tau)
             .with_context(|| "Couldn't compute the eccentric anomaly")?;
         Ok(1. - self.e * F::cos(e_a))
     }
