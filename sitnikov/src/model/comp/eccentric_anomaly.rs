@@ -11,7 +11,7 @@ use crate::Float;
 impl<F: Float> Model<F> {
     /// Compute the eccentric anomaly from the eccentricity and the mean anomaly
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn eccentric_anomaly(&self, m: F) -> Result<F> {
+    pub(super) fn eccentric_anomaly(&self, m: F) -> Result<F> {
         // Define the non-linear equation
         let fun = |x| x - self.e * F::sin(x) - m;
         // Define its derivative

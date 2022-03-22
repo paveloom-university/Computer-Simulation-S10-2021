@@ -20,7 +20,7 @@ lazy_static! {
 impl<F: Float> Model<F> {
     /// Integrate the system using the 4th-order Yoshida method
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn yoshida_4th(&mut self) -> Result<()> {
+    pub(super) fn yoshida_4th(&mut self) -> Result<()> {
         // Add capacity to the result vectors
         self.results.z = Vec::<F>::with_capacity(self.n + 1);
         self.results.z_v = Vec::<F>::with_capacity(self.n + 1);

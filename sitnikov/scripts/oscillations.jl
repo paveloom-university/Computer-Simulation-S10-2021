@@ -47,7 +47,7 @@ end
 if length(ARGS) == 0
     println("""
         Usage:
-        julia --project=. scripts/oscillations.jl [--postfix <POSTFIX>] <INPUT> """
+        julia --project=. scripts/oscillations.jl [-h <H>] [--postfix <POSTFIX>] <INPUT> """
     )
     exit(1)
 end

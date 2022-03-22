@@ -11,7 +11,7 @@ use crate::Float;
 impl<F: Float> Model<F> {
     /// Compute the radius (distance from the focus to either
     /// of the primary bodies) from the eccentricity and time
-    pub fn radius(&self, t: F) -> Result<F> {
+    pub(super) fn radius(&self, t: F) -> Result<F> {
         let e_a = self
             .eccentric_anomaly(t % (2. * F::PI()) - self.tau)
             .with_context(|| "Couldn't compute the eccentric anomaly")?;

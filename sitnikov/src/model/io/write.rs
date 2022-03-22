@@ -32,6 +32,12 @@ impl<F: Float> Model<F> {
             .with_context(|| "Couldn't serialize the position vector")?;
         serialize_into(&self.results.z_v, &output.join("z_v.bin"))
             .with_context(|| "Couldn't serialize the velocity vector")?;
+        if self.compute_megnos {
+            serialize_into(&self.results.megno, &output.join("megno.bin"))
+                .with_context(|| "Couldn't serialize the MEGNOs vector")?;
+            serialize_into(&self.results.mean_megno, &output.join("mean_megno.bin"))
+                .with_context(|| "Couldn't serialize the mean MEGNOs vector")?;
+        }
         Ok(())
     }
 }

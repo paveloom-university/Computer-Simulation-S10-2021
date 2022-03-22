@@ -10,7 +10,7 @@ use crate::Float;
 impl<F: Float> Model<F> {
     /// Do a one-step integration using the leapfrog method
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn leapfrog_step(&self, t: F, z: F, z_v: F, h: F, a_prev: F) -> Result<(F, F, F)> {
+    pub(super) fn leapfrog_step(&self, t: F, z: F, z_v: F, h: F, a_prev: F) -> Result<(F, F, F)> {
         let z = z + z_v * h + 0.5 * a_prev * h.powi(2);
         let a = self
             .acceleration(t + h, z)
@@ -21,7 +21,7 @@ impl<F: Float> Model<F> {
 
     /// Integrate the system using the leapfrog method
     #[cfg(test)]
-    pub fn leapfrog(&mut self) -> Result<()> {
+    pub(super) fn leapfrog(&mut self) -> Result<()> {
         // Add capacity to the result vectors
         self.results.z = Vec::<F>::with_capacity(self.n + 1);
         self.results.z_v = Vec::<F>::with_capacity(self.n + 1);

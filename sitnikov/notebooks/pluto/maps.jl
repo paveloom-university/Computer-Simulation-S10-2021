@@ -138,7 +138,7 @@ for pair in INITIAL_VALUES
     args = [
         "-e", params.e,
         "-h", params.h,
-                "-t", params.τ,
+        "-t", params.τ,
         "-P", params.P,
         "-p", pair[begin],
         "-v", pair[end],
@@ -154,8 +154,8 @@ for pair in INITIAL_VALUES
     _, z_v = read_bincode(z_v_path)
     # Compute the number of points per period
     np = UInt((n - 1) / params.P)
-        # Compute the starting index
-        si = UInt(1 + params.θₛ * np)
+    # Compute the starting index
+    si = UInt(1 + params.θₛ * np)
     # Plot the figure
     println(" "^4, "> Plotting the Poincaré map for the $pair pair...")
     s = scatter(
@@ -185,7 +185,7 @@ for pair in INITIAL_VALUES
     );
     # Limit by x
     if params.limit
-            xlims!(params.xl, params.xr)
+        xlims!(params.xl, params.xr)
     end
 end
 

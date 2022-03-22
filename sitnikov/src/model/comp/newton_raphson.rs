@@ -10,7 +10,11 @@ const MAX_ITER: u16 = 5000;
 
 /// Find a root of a continuous function using the Newton-Raphson method
 #[replace_float_literals(F::from(literal).unwrap())]
-pub fn newton_raphson<F: Float>(f: impl Fn(F) -> F, d: impl Fn(F) -> F, initial: F) -> Result<F> {
+pub(super) fn newton_raphson<F: Float>(
+    f: impl Fn(F) -> F,
+    d: impl Fn(F) -> F,
+    initial: F,
+) -> Result<F> {
     // If the initial value is already a root
     if initial.abs() < F::epsilon() {
         Ok(initial)

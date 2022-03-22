@@ -9,6 +9,7 @@ use num::{traits::FloatConst, Float as NumFloat, NumCast};
 use serde::Serialize;
 
 use std::fmt::{Debug, Display};
+use std::iter::Sum;
 use std::num::ParseFloatError;
 use std::str::FromStr;
 
@@ -22,6 +23,7 @@ pub trait Float:
     + NumCast
     + NumFloat
     + Serialize
+    + for<'a> Sum<&'a Self>
 {
 }
 impl Float for f32 {}
@@ -36,10 +38,9 @@ fn main() -> Result<()> {
     let args = cli::parse();
     // Create a model
     let mut model = model::Model::<f64>::from(&args);
-    // Integrate the equations of motion
-    // using the 4th-order Yoshida algorithm
+    // Integrate the model
     model
-        .yoshida_4th()
+        .integrate()
         .with_context(|| "Couldn't integrate the model")?;
     // Write the results
     model

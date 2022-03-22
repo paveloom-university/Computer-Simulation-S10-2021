@@ -17,6 +17,9 @@ pub struct Args<F: 'static + Float> {
     /// Output directory
     #[clap(short, long, validator = Self::validate_output)]
     pub output: PathBuf,
+    /// Compute MEGNOs?
+    #[clap(long = "megno")]
+    pub compute_megnos: bool,
     /// Eccentricity
     #[clap(short, help_heading = "MODEL", default_value = "0.0", validator = Self::validate_e)]
     pub e: F,

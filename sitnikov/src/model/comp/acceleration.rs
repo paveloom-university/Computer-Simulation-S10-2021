@@ -11,7 +11,7 @@ use crate::Float;
 impl<F: Float> Model<F> {
     /// Compute the acceleration (second derivative)
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn acceleration(&self, t: F, z: F) -> Result<F> {
+    pub(super) fn acceleration(&self, t: F, z: F) -> Result<F> {
         let r = self
             .radius(t)
             .with_context(|| "Couldn't compute the radius")?;

@@ -25,6 +25,8 @@ pub struct Model<F: Float> {
     h: F,
     /// Number of iterations
     n: usize,
+    ///Compute MEGNOs?
+    compute_megnos: bool,
     /// Results of the integration
     results: Results<F>,
 }
@@ -46,6 +48,7 @@ impl<F: Float> Model<F> {
                 .round()
                 .to_usize()
                 .unwrap(),
+            compute_megnos: args.compute_megnos,
             results: Results::new(),
         }
     }
@@ -65,6 +68,7 @@ impl<F: Float> Model<F> {
             z_v_0: 0.,
             h: h * F::FRAC_PI_2(),
             n: (1000. * 4. / h).round().to_usize().unwrap(),
+            compute_megnos: false,
             results: Results::new(),
         }
     }
@@ -77,6 +81,10 @@ struct Results<F: Float> {
     z: Vec<F>,
     /// The velocity of the third body
     z_v: Vec<F>,
+    /// MEGNO
+    megno: Vec<F>,
+    /// Mean MEGNO
+    mean_megno: Vec<F>,
 }
 
 impl<F: Float> Results<F> {
@@ -85,6 +93,8 @@ impl<F: Float> Results<F> {
         Self {
             z: Vec::<F>::new(),
             z_v: Vec::<F>::new(),
+            megno: Vec::<F>::new(),
+            mean_megno: Vec::<F>::new(),
         }
     }
 }
