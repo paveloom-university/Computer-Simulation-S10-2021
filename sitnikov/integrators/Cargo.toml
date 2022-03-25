@@ -1,0 +1,20 @@
+[package]
+name = "integrators"
+version = "0.1.0"
+authors = ["Pavel Sobolev <paveloom@riseup.net>"]
+edition = "2021"
+rust-version = "1.59"
+description = "Providing an interface for integrating a system of 1st-order ODEs"
+documentation = "https://github.com/paveloom-university/Computer-Simulation-S10-2022"
+readme = "README.md"
+homepage = "https://github.com/paveloom-university/Computer-Simulation-S10-2022"
+repository = "https://github.com/paveloom-university/Computer-Simulation-S10-2022"
+license-file = "LICENSE.md"
+keywords = ["ode", "integration"]
+categories = ["mathematics"]
+
+[dependencies]
+anyhow = "=1.0.56"
+nalgebra = "=0.30.1"
+num = "=0.4.0"
+numeric_literals = "0.2.0"

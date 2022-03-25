@@ -38,9 +38,9 @@ version = "1.16.1+1"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "c9a6160317d1abe9c44b3beb367fd448117679ca"
+git-tree-sha1 = "9950387274246d08af38f6eef8cb5480862a435f"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.13.0"
+version = "1.14.0"
 
 [[deps.ChangesOfVariables]]
 deps = ["ChainRulesCore", "LinearAlgebra", "Test"]
@@ -507,9 +507,9 @@ uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "648107615c15d4e09f7eca16307bc821c1f718d8"
+git-tree-sha1 = "ab05aa4cc89736e95915b01e7279e61b1bfe33b8"
 uuid = "458c3c95-2e84-50aa-8efc-19380b2a3a95"
-version = "1.1.13+0"
+version = "1.1.14+0"
 
 [[deps.Opus_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -557,16 +557,16 @@ uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.2.0"
 
 [[deps.Plots]]
-deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
-git-tree-sha1 = "23d109aad5d225e945c813c6ebef79104beda955"
+deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
+git-tree-sha1 = "90021b03a38f1ae9dbd7bf4dc5e3dcb7676d302c"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.26.0"
+version = "1.27.2"
 
 [[deps.Pluto]]
 deps = ["Base64", "Configurations", "Dates", "Distributed", "FileWatching", "FuzzyCompletions", "HTTP", "InteractiveUtils", "Logging", "Markdown", "MsgPack", "Pkg", "REPL", "RelocatableFolders", "Sockets", "Tables", "UUIDs"]
-git-tree-sha1 = "c97f4548e903d132342a6f5998554f507d0b2578"
+git-tree-sha1 = "1302c9385c9e5b47f9872688015927f7929371cb"
 uuid = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
-version = "0.18.1"
+version = "0.18.4"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "UUIDs"]
@@ -605,9 +605,9 @@ version = "1.2.1"
 
 [[deps.RecipesPipeline]]
 deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
-git-tree-sha1 = "995a812c6f7edea7527bb570f0ac39d0fb15663c"
+git-tree-sha1 = "dc1e451e15d90347a7decc4221842a022b011714"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
-version = "0.5.1"
+version = "0.5.2"
 
 [[deps.Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
@@ -663,9 +663,9 @@ uuid = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
-git-tree-sha1 = "74fb527333e72ada2dd9ef77d98e4991fb185f04"
+git-tree-sha1 = "6976fab022fea2ffea3d945159317556e5dad87c"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.4.1"
+version = "1.4.2"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]

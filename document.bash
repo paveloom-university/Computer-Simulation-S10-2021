@@ -15,8 +15,8 @@ for crate in "${crates[@]}"; do
     # Go to its root directory
     cd "${crate}" || continue
     # Document the crate
-    cargo doc
-    RUSTDOCFLAGS="--html-in-header assets/katex-header.html" cargo doc --no-deps
+    cargo doc --workspace --document-private-items
+    RUSTDOCFLAGS="--html-in-header assets/katex-header.html" cargo doc --no-deps --workspace --document-private-items
     # Copy the documentation to the output directory
     cp -r target/doc/ ../public/"${crate}"
     echo

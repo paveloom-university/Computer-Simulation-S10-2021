@@ -5,6 +5,7 @@ mod cli;
 mod model;
 
 use anyhow::{Context, Result};
+use integrators::Float as IntegratorsFloat;
 use num::{traits::FloatConst, Float as NumFloat, NumCast};
 use serde::Serialize;
 
@@ -24,6 +25,7 @@ pub trait Float:
     + NumFloat
     + Serialize
     + for<'a> Sum<&'a Self>
+    + IntegratorsFloat
 {
 }
 impl Float for f32 {}

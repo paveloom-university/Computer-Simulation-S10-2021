@@ -3,6 +3,7 @@
 mod comp;
 mod io;
 
+use integrators::Integrators;
 use numeric_literals::replace_float_literals;
 
 use crate::cli::Args;
@@ -71,6 +72,12 @@ impl<F: Float> Model<F> {
             compute_megnos: false,
             results: Results::new(),
         }
+    }
+}
+
+impl<F: Float> Integrators<F> for Model<F> {
+    fn update(&self, _t: F, x: &[F]) -> Vec<F> {
+        x.to_vec()
     }
 }
 
