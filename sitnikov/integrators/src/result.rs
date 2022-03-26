@@ -1,4 +1,4 @@
-//! Provides the [`Result`] alias and its extension trait [`ResultExt`]
+//! Provides the [`Result`] alias and its extension trait [`ResultExt`](crate::ResultExt)
 
 use nalgebra::{DVector, Dynamic, Matrix, VecStorage};
 
@@ -8,8 +8,7 @@ use crate::Float;
 pub type Result<F> = Matrix<F, Dynamic, Dynamic, VecStorage<F, Dynamic, Dynamic>>;
 
 /// An extension trait for the [`Result`] type
-#[allow(clippy::module_name_repetitions)]
-pub trait ResultExt<F: Float> {
+pub trait Ext<F: Float> {
     /// Get initial values
     fn initial_values(&self) -> Vec<F>;
     /// Set the `i`-th state of the system
@@ -18,7 +17,7 @@ pub trait ResultExt<F: Float> {
     fn state(&self, i: usize) -> Vec<F>;
 }
 
-impl<F: Float> ResultExt<F> for Result<F> {
+impl<F: Float> Ext<F> for Result<F> {
     fn initial_values(&self) -> Vec<F> {
         self.state(0)
     }

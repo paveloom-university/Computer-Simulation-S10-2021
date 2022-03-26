@@ -1,11 +1,9 @@
 //! Provides the [`runge_kutta_4th`] macro, plus tests for the method
 
-/// Defines the [`runge_kutta_4th`](super::Integrators#method.runge_kutta_4th) method
-#[macro_export]
+/// Defines the [`runge_kutta_4th`](crate::GeneralIntegrator#method.runge_kutta_4th) method
 macro_rules! runge_kutta_4th {
     () => {
         /// Integrate the system using the 4th-order Runge-Kutta method
-        /// for `n` iterations with time step `h`, starting from time `t_0`
         ///
         /// Arguments:
         /// * `t_0` --- Initial value of time;
@@ -15,6 +13,8 @@ macro_rules! runge_kutta_4th {
         /// * `token` --- Private token.
         #[replace_float_literals(F::from(literal).unwrap())]
         fn runge_kutta_4th(&self, t_0: F, h: F, n: usize, result: &mut Result<F>, _: &Token) {
+            // Get the initial state
+            let mut x = result.initial_values();
             // Integrate
             for i in 0..n {
                 // Compute the time moments
@@ -22,8 +22,6 @@ macro_rules! runge_kutta_4th {
                 let t_2 = t + h / 2.;
                 let t_3 = t_2;
                 let t_4 = t + h;
-                // Get the current state
-                let x = result.state(i);
                 // Compute the first increment
                 let k_1 = &self.update(t, &x);
                 // Compute the modified state for the second increment
@@ -51,7 +49,7 @@ macro_rules! runge_kutta_4th {
                 // Compute the fourth increment
                 let k_4 = self.update(t_4, &x_m);
                 // Compute the final modified state
-                let x_m = x
+                x = x
                     .iter()
                     .zip(k_1.iter())
                     .zip(k_2.iter())
@@ -62,14 +60,13 @@ macro_rules! runge_kutta_4th {
                     })
                     .collect();
                 // Put the new state in the result
-                result.set_state(i + 1, x_m);
+                result.set_state(i + 1, x.clone());
             }
         }
     };
 }
 
-#[cfg(test)]
-use crate::test;
+pub(super) use runge_kutta_4th;
 
 #[cfg(test)]
-test!(runge_kutta_4th);
+super::test_method::test_method!(runge_kutta_4th, 4);

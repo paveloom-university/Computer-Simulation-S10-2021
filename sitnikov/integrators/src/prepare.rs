@@ -1,7 +1,6 @@
 //! Provides the [`prepare`] macro, plus tests for the method
 
-/// Defines the [`prepare`](super::Integrators#method.prepare) method
-#[macro_export]
+/// Defines the `prepare` method
 macro_rules! prepare {
     () => {
         /// Prepare a matrix for the result and
@@ -29,18 +28,20 @@ macro_rules! prepare {
     };
 }
 
+pub(super) use prepare;
+
 #[cfg(test)]
 use anyhow::{anyhow, Result};
 
 #[test]
-fn test_prepare() -> Result<()> {
+fn test() -> Result<()> {
     use crate::private::Token;
-    use crate::{Float, Integrators, ResultExt};
+    use crate::{Float, GeneralIntegrator, ResultExt};
 
     // Implement the trait on a test struct
     type F = f64;
     struct Test {}
-    impl<F: Float> Integrators<F> for Test {
+    impl<F: Float> GeneralIntegrator<F> for Test {
         fn update(&self, _t: F, x: &[F]) -> Vec<F> {
             x.to_vec()
         }
