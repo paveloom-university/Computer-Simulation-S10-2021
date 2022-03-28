@@ -25,7 +25,14 @@ macro_rules! yoshida_4th {
         /// * `result` --- Result matrix;
         /// * `token` --- Private token.
         #[replace_float_literals(F::from(literal).unwrap())]
-        fn yoshida_4th(&self, t_0: F, h: F, n: usize, result: &mut Result<F>, token: &Token) {
+        fn yoshida_4th(
+            &self,
+            t_0: F,
+            h: F,
+            n: usize,
+            result: &mut Result<F>,
+            token: &Token,
+        ) -> anyhow::Result<()> {
             // Compute the increments
             let i_1 = h * F::from(*yoshida_4th::D_1).unwrap();
             let i_2 = h * F::from(*yoshida_4th::D_2).unwrap();
@@ -33,18 +40,23 @@ macro_rules! yoshida_4th {
             // Get the initial state
             let mut x = result.initial_values();
             // Compute the initial accelerations
-            let mut a = self.accelerations(t_0, &x);
+            let mut a = self
+                .accelerations(t_0, &x)
+                .with_context(|| "Couldn't compute the initial accelerations")?;
             // Integrate
             for i in 0..n {
                 // Compute the time moment
                 let t = t_0 + F::from(i).unwrap() * h;
                 // Compute the next states
                 for (i, h) in [(0., i_1), (i_1, i_2), (i_3, i_1)] {
-                    (x, a) = self.leapfrog_once(t + i, &x, &a, h, token);
+                    (x, a) = self
+                        .leapfrog_once(t + i, &x, &a, h, token)
+                        .with_context(|| "Couldn't compute one of the next states")?;
                 }
                 // Put the new state in the result
                 result.set_state(i + 1, x.clone());
             }
+            Ok(())
         }
     };
 }

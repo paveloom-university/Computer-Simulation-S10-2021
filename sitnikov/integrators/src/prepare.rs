@@ -30,11 +30,8 @@ macro_rules! prepare {
 
 pub(super) use prepare;
 
-#[cfg(test)]
-use anyhow::{anyhow, Result};
-
 #[test]
-fn test() -> Result<()> {
+fn test() -> anyhow::Result<()> {
     use crate::private::Token;
     use crate::{Float, GeneralIntegrator, ResultExt};
 
@@ -42,8 +39,8 @@ fn test() -> Result<()> {
     type F = f64;
     struct Test {}
     impl<F: Float> GeneralIntegrator<F> for Test {
-        fn update(&self, _t: F, x: &[F]) -> Vec<F> {
-            x.to_vec()
+        fn update(&self, _t: F, x: &[F]) -> anyhow::Result<Vec<F>> {
+            Ok(x.to_vec())
         }
     }
     let test = Test {};
@@ -57,7 +54,7 @@ fn test() -> Result<()> {
     // Check the first column of the matrix
     let x: Vec<F> = result.initial_values();
     if x != x_0 {
-        return Err(anyhow!(
+        return Err(anyhow::anyhow!(
             "The first column of the matrix is not the same as initial values"
         ));
     }

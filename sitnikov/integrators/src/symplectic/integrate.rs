@@ -12,7 +12,14 @@ macro_rules! integrate {
         /// * `n` --- Number of iterations;
         /// * `method` --- Integration method.
         #[replace_float_literals(F::from(literal).unwrap())]
-        fn integrate(&self, x: Vec<F>, t_0: F, h: F, n: usize, method: Integrators) {
+        fn integrate(
+            &self,
+            x: Vec<F>,
+            t_0: F,
+            h: F,
+            n: usize,
+            method: Integrators,
+        ) -> anyhow::Result<()> {
             // Get a token for using the private methods
             let token = Token {};
             // Prepare a result matrix
@@ -20,12 +27,15 @@ macro_rules! integrate {
             // Call the specified method to perform integration
             match method {
                 Integrators::Leapfrog => {
-                    self.leapfrog(t_0, h, n, &mut result, &token);
+                    self.leapfrog(t_0, h, n, &mut result, &token)
+                        .with_context(|| "Couldn't integrate using the leapfrog method")?;
                 }
                 Integrators::Yoshida4th => {
-                    self.yoshida_4th(t_0, h, n, &mut result, &token);
+                    self.yoshida_4th(t_0, h, n, &mut result, &token)
+                        .with_context(|| "Coudln't integrate using the 4th-order Yoshida method")?;
                 }
             }
+            Ok(())
         }
     };
 }

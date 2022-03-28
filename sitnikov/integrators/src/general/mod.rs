@@ -8,6 +8,7 @@ mod runge_kutta_4th;
 #[cfg(test)]
 mod test_method;
 
+use anyhow::{self, Context};
 use nalgebra::{DVector, Dynamic, Matrix};
 use numeric_literals::replace_float_literals;
 
@@ -31,7 +32,7 @@ pub trait Integrator<F: Float> {
     /// Arguments:
     /// * `t` --- Current time moment;
     /// * `x` --- Current state of the system.
-    fn update(&self, t: F, x: &[F]) -> Vec<F>;
+    fn update(&self, t: F, x: &[F]) -> anyhow::Result<Vec<F>>;
     // The rest of the methods are defined by these macros
     integrate!();
     prepare!();

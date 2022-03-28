@@ -20,7 +20,7 @@ macro_rules! leapfrog_once {
             a_prev: &[F],
             h: F,
             _: &Token,
-        ) -> (Vec<F>, Vec<F>) {
+        ) -> anyhow::Result<(Vec<F>, Vec<F>)> {
             // Get the length of the state vector and its half
             let l = x_prev.len();
             let lh = l / 2;
@@ -31,12 +31,14 @@ macro_rules! leapfrog_once {
                 x[i] = x_prev[i] + x_prev[i + lh] * h + 0.5 * a_prev[i] * h.powi(2)
             }
             // Compute new accelerations
-            let a = self.accelerations(t + h, &x[0..lh]);
+            let a = self
+                .accelerations(t + h, &x[0..lh])
+                .with_context(|| "Couldn't compute the new acceleration")?;
             // Update the velocities
             for i in lh..l {
                 x[i] = x_prev[i] + 0.5 * (a_prev[i - lh] + a[i - lh]) * h
             }
-            (x, a)
+            Ok((x, a))
         }
     };
 }

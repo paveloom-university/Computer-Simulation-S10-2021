@@ -29,7 +29,14 @@ macro_rules! yoshida_4th_2 {
         /// * `result` --- Result matrix;
         /// * `token` --- Private token.
         #[replace_float_literals(F::from(literal).unwrap())]
-        fn yoshida_4th_2(&self, t_0: F, h: F, n: usize, result: &mut Result<F>, _: &Token) {
+        fn yoshida_4th_2(
+            &self,
+            t_0: F,
+            h: F,
+            n: usize,
+            result: &mut Result<F>,
+            _: &Token,
+        ) -> anyhow::Result<()> {
             // Compute the coefficients
             let c_1 = F::from(*yoshida_4th_2::W_2).unwrap() * h;
             let c_2 = F::from(*yoshida_4th_2::W_3).unwrap() * h;
@@ -58,7 +65,9 @@ macro_rules! yoshida_4th_2 {
                         x[i] = x[i] + c * x[i + lh];
                     }
                     // Compute the accelerations
-                    let a = self.accelerations(t + i, &x[0..lh]);
+                    let a = self
+                        .accelerations(t + i, &x[0..lh])
+                        .with_context(|| "Couldn't compute the accelerations")?;
                     // Update the velocities
                     for i in lh..l {
                         x[i] = x[i] + d * a[i - lh];
@@ -71,6 +80,7 @@ macro_rules! yoshida_4th_2 {
                 // Put the new state in the result
                 result.set_state(i + 1, x.clone());
             }
+            Ok(())
         }
     };
 }

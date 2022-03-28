@@ -14,6 +14,7 @@ mod test_method;
 #[cfg(test)]
 mod yoshida_4th_2;
 
+use anyhow::{self, Context};
 use nalgebra::{DVector, Dynamic, Matrix};
 use numeric_literals::replace_float_literals;
 
@@ -44,7 +45,7 @@ pub trait Integrator<F: Float> {
     /// Arguments:
     /// * `t` --- Current time moment;
     /// * `x` --- Current values of positions.
-    fn accelerations(&self, t: F, x: &[F]) -> Vec<F>;
+    fn accelerations(&self, t: F, x: &[F]) -> anyhow::Result<Vec<F>>;
     // The rest of the methods are defined by these macros
     integrate!();
     leapfrog!();

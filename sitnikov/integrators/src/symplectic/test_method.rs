@@ -5,11 +5,11 @@
 macro_rules! test_method {
     ($method:ident, $order:literal) => {
         #[cfg(test)]
-        use anyhow::{anyhow, Result};
+        use anyhow::{self, Context};
 
         #[test]
         #[allow(clippy::cast_precision_loss)]
-        fn test() -> Result<()> {
+        fn test() -> anyhow::Result<()> {
             use crate::private::Token;
             use crate::{Float, ResultExt, SymplecticIntegrator};
 
@@ -17,8 +17,8 @@ macro_rules! test_method {
             type F = f64;
             struct Test {}
             impl<F: Float> SymplecticIntegrator<F> for Test {
-                fn accelerations(&self, t: F, x: &[F]) -> Vec<F> {
-                    vec![t - x[0]]
+                fn accelerations(&self, t: F, x: &[F]) -> anyhow::Result<Vec<F>> {
+                    Ok(vec![t - x[0]])
                 }
             }
             let test = Test {};
@@ -31,9 +31,10 @@ macro_rules! test_method {
             let t = t_0 + h * n as f64;
             let token = Token {};
 
-            // Integrate forward, using the 4th-order Runge-Kutta method
+            // Integrate forward
             let mut result = test.prepare(x, n, &token);
-            test.$method(t_0, h, n, &mut result, &token);
+            test.$method(t_0, h, n, &mut result, &token)
+                .with_context(|| "Couldn't integrate forward")?;
 
             // Check the results
             let x_0 = vec![t - F::sin(t) + F::cos(t), 1. - F::sin(t) - F::cos(t)];
@@ -42,13 +43,14 @@ macro_rules! test_method {
                 .zip(x_0.iter())
                 .any(|(&x, &x_0)| (x - x_0).abs() >= 10. * h.powi($order))
             {
-                return Err(anyhow!(
+                return Err(anyhow::anyhow!(
                     "The result of integration is not the same as expected: {x_0:?} vs {x:?}"
                 ));
             }
 
-            // Integrate forward, using the 4th-order Runge-Kutta method
-            test.$method(t, -h, n, &mut result, &token);
+            // Integrate backward
+            test.$method(t, -h, n, &mut result, &token)
+                .with_context(|| "Couldn't integrate backward")?;
 
             // Check the results
             let x_0 = vec![1., 0.];
@@ -57,7 +59,7 @@ macro_rules! test_method {
                 .zip(x_0.iter())
                 .any(|(&x, &x_0)| (x - x_0).abs() >= 10. * h.powi($order))
             {
-                return Err(anyhow!(
+                return Err(anyhow::anyhow!(
                     "The integrator doesn't have time reversibility: {x_0:?} vs {x:?}"
                 ));
             }

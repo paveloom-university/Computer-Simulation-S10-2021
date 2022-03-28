@@ -3,6 +3,7 @@
 mod comp;
 mod io;
 
+use anyhow::Result;
 use integrators::GeneralIntegrator;
 use numeric_literals::replace_float_literals;
 
@@ -76,8 +77,8 @@ impl<F: Float> Model<F> {
 }
 
 impl<F: Float> GeneralIntegrator<F> for Model<F> {
-    fn update(&self, _t: F, x: &[F]) -> Vec<F> {
-        x.to_vec()
+    fn update(&self, _t: F, x: &[F]) -> Result<Vec<F>> {
+        Ok(x.to_vec())
     }
 }
 
