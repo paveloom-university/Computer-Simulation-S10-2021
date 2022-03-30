@@ -51,31 +51,33 @@ macro_rules! yoshida_4th_2 {
             let i_3 = c_1 + c_2 + c_3;
             // Get the initial state
             let mut x = result.initial_values();
-            // Get the length of the state vector and its half
+            // Get the length of the state vector and its thirds
             let l = x.len();
-            let lh = l / 2;
+            let lt1 = l / 3;
+            let lt2 = 2 * l / 3;
             // Integrate
             for i in 0..n {
                 // Compute the time moment
                 let t = t_0 + F::from(i).unwrap() * h;
                 // Compute the next states
-                for (c, d, i) in [(c_1, d_1, i_1), (c_2, d_2, i_2), (c_3, d_3, i_3)] {
+                for (c, d, l) in [(c_1, d_1, i_1), (c_2, d_2, i_2), (c_3, d_3, i_3)] {
                     // Update the positions
-                    for i in 0..lh {
-                        x[i] = x[i] + c * x[i + lh];
+                    for j in 0..lt1 {
+                        x[j] = x[j] + c * x[j + lt1];
                     }
                     // Compute the accelerations
                     let a = self
-                        .accelerations(t + i, &x[0..lh])
+                        .accelerations(t + l, &x[0..lt1])
                         .with_context(|| "Couldn't compute the accelerations")?;
-                    // Update the velocities
-                    for i in lh..l {
-                        x[i] = x[i] + d * a[i - lh];
+                    // Update the accelerations and velocities
+                    for j in lt1..lt2 {
+                        x[j + lt1] = a[j - lt1];
+                        x[j] = x[j] + d * x[j + lt1];
                     }
                 }
                 // Update the positions for the last time
-                for i in 0..lh {
-                    x[i] = x[i] + c_4 * x[i + lh];
+                for i in 0..lt1 {
+                    x[i] = x[i] + c_4 * x[i + lt1];
                 }
                 // Put the new state in the result
                 result.set_state(i + 1, x.clone());

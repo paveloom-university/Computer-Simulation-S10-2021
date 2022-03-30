@@ -15,7 +15,7 @@ mod test_method;
 mod yoshida_4th_2;
 
 use anyhow::{self, Context};
-use nalgebra::{DVector, Dynamic, Matrix};
+use nalgebra::DVector;
 use numeric_literals::replace_float_literals;
 
 use crate::prepare::prepare;

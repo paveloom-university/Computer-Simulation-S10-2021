@@ -9,7 +9,7 @@ lazy_static! {
     pub static ref D_1: FloatMax = 1. / (2. - FloatMax::exp(FloatMax::ln(2.) / 3.));
     /// The second coefficient in the 4th-order Yoshida method
     pub static ref D_2: FloatMax = 1. - 2. * *D_1;
-     /// The sum of the first two coefficients in the 4th-order Yoshida method
+    /// The sum of the first two coefficients in the 4th-order Yoshida method
     pub static ref D_3: FloatMax = *D_1 + *D_2;
 }
 
@@ -39,18 +39,14 @@ macro_rules! yoshida_4th {
             let i_3 = h * F::from(*yoshida_4th::D_3).unwrap();
             // Get the initial state
             let mut x = result.initial_values();
-            // Compute the initial accelerations
-            let mut a = self
-                .accelerations(t_0, &x)
-                .with_context(|| "Couldn't compute the initial accelerations")?;
             // Integrate
             for i in 0..n {
                 // Compute the time moment
                 let t = t_0 + F::from(i).unwrap() * h;
                 // Compute the next states
-                for (i, h) in [(0., i_1), (i_1, i_2), (i_3, i_1)] {
-                    (x, a) = self
-                        .leapfrog_once(t + i, &x, &a, h, token)
+                for (l, h) in [(0., i_1), (i_1, i_2), (i_3, i_1)] {
+                    x = self
+                        .leapfrog_once(t + l, &x, h, token)
                         .with_context(|| "Couldn't compute one of the next states")?;
                 }
                 // Put the new state in the result

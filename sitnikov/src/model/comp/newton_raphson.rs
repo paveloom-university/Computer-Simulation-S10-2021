@@ -1,4 +1,4 @@
-//! This module provides an implementation of the Newton-Raphson method
+//! Provides the [`newton_raphson`] routine
 
 use anyhow::{anyhow, Result};
 use numeric_literals::replace_float_literals;

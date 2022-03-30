@@ -26,9 +26,6 @@ pub struct Args<F: 'static + Float> {
     /// Time at the pericenter (a fraction of $ 2 \pi $)
     #[clap(short, help_heading = "MODEL", default_value = "0.0", validator = Self::validate_tau)]
     pub tau: F,
-    /// Initial value of time
-    #[clap(short = 'a', help_heading = "MODEL", default_value = "1.0", validator = Self::validate_t_0)]
-    pub t_0: F,
     /// Initial value of position of the third body
     #[clap(short = 'p', help_heading = "MODEL", default_value = "1.0", validator = Self::validate_z_0)]
     pub z_0: F,
@@ -47,7 +44,7 @@ pub struct Args<F: 'static + Float> {
 macro_rules! validator {
     ( $arg:ident, $ty:ty, $range:expr, $name:expr) => {
         paste! {
-                #[doc = "Check if the " $name " is in range"]
+            #[doc = "Check if the " $name " is in range"]
             fn [<validate_ $arg>](s: &str) -> Result<(), String> {
                 $ty::from_str(s).map(|e| $range.contains(&e))
                     .map_err(|_| format!("Couldn't parse the argument `{}`", stringify!($name)))
@@ -101,12 +98,6 @@ impl<F: 'static + Float> Args<F> {
 
     validator!(e, F, 0.0..1.0, "eccentricity");
     validator!(tau, F, 0.0..1.0, "time at the pericenter");
-    validator!(
-        t_0,
-        F,
-        -F::max_value()..=F::max_value(),
-        "initial value of time"
-    );
     validator!(
         z_0,
         F,

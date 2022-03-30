@@ -11,6 +11,9 @@ I = UInt64
 POSTFIX = ""
 H = 0.01
 
+# Define fixed parameters
+I_M = round(UInt, 1 / H)
+
 "Check if the value of the option is the last argument"
 function check_last(i)
     if i + 1 == length(ARGS)
@@ -105,7 +108,7 @@ if isfile(megno_path) && isfile(mean_megno_path)
 
     # Compute the time scale
     n = n_megno
-    time = [ i * H / (2 * π) for i in 0:(n-1) ]
+    time = [ (i + I_M) * H / (2 * π) for i in 0:(n-1) ]
 
     println(" "^4, "> Plotting the time evolution of MEGNOs...")
 
@@ -135,7 +138,6 @@ if isfile(megno_path) && isfile(mean_megno_path)
         title = "Time evolution of mean MEGNOs",
         xlabel = L"t \; \textrm{[2 \pi]}",
         ylabel = L"\overline{Y}",
-        ylims = (-0.0001, 0.0001),
         titlefontsize = 12,
         size = (400, 400),
     )

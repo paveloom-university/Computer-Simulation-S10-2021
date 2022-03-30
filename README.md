@@ -7,18 +7,26 @@ Repository:
 - [GitHub](https://github.com/paveloom-university/Computer-Simulation-S10-2022)
 - [GitLab](https://gitlab.com/paveloom-g/university/s10-2022/computer-simulation)
 
-Reference:
-- [sitnikov](sitnikov)
-  - [GitHub](https://paveloom-university.github.io/Computer-Simulation-S10-2022)
-  - [GitLab](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation)
+References:
+- [sitnikov](sitnikov) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation)]: Simulating the Sitnikov problem
+  - [integrators](sitnikov/integrators) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/sitnikov/integrators/index.html)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/sitnikov/integrators/index.html)]: Providing an interface for integrating a system of 1st-order ODEs
+
+#### Rust
+
+This project provides [Rust](https://www.rust-lang.org) crates. To build them, use [Cargo](https://doc.rust-lang.org/cargo).
+
+#### CLI
+
+This project provides binaries with command-line interfaces. To see the usage examples, run `cargo
+run -- --help`.
 
 #### Tests
 
-To run tests, consider using [`nextest`](https://nexte.st/).
+To run tests, consider using [`nextest`](https://nexte.st).
 
 #### KaTeX
 
-To build a crate's documentation with [KaTeX](https://katex.org/) support, run:
+To build a crate's documentation with [KaTeX](https://katex.org) support, run:
 
 ```bash
 cargo doc

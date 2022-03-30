@@ -3,11 +3,11 @@
 mod comp;
 mod io;
 
-use anyhow::Result;
-use integrators::GeneralIntegrator;
+use integrators::ResultExt;
+
+#[cfg(test)]
 use numeric_literals::replace_float_literals;
 
-use crate::cli::Args;
 use crate::Float;
 
 /// A model of the Sitnikov problem
@@ -19,41 +19,18 @@ pub struct Model<F: Float> {
     tau: F,
     /// Initial value of time
     t_0: F,
-    /// Initial value of position of the third body
-    z_0: F,
-    /// Initial value of velocity of the third body
-    z_v_0: F,
+    /// Vector of initial values
+    x_0: Vec<F>,
     /// Time step
     h: F,
     /// Number of iterations
     n: usize,
-    ///Compute MEGNOs?
+    /// An index of the first value for MEGNOs
+    i_m: usize,
+    /// Compute MEGNOs?
     compute_megnos: bool,
     /// Results of the integration
     results: Results<F>,
-}
-
-#[replace_float_literals(F::from(literal).unwrap())]
-impl<F: Float> Model<F> {
-    /// Initialize a model from arguments
-    pub fn from(args: &Args<F>) -> Self {
-        Self {
-            e: args.e,
-            tau: args.tau * 2. * F::PI(),
-            z_0: args.z_0,
-            t_0: args.t_0,
-            z_v_0: args.z_v_0,
-            h: args.h * F::FRAC_PI_2(),
-            // Rounded (just in case) because it's supposed to
-            // be integral because of the time step validator
-            n: (F::from(args.p).unwrap() * 4. / args.h)
-                .round()
-                .to_usize()
-                .unwrap(),
-            compute_megnos: args.compute_megnos,
-            results: Results::new(),
-        }
-    }
 }
 
 #[cfg(test)]
@@ -66,43 +43,31 @@ impl<F: Float> Model<F> {
             e: 0.,
             tau: 0.,
             t_0: 0.,
-            z_0: 1.,
-            z_v_0: 0.,
+            x_0: Vec::new(),
             h: h * F::FRAC_PI_2(),
             n: (1000. * 4. / h).round().to_usize().unwrap(),
+            i_m: 0,
             compute_megnos: false,
             results: Results::new(),
         }
     }
 }
 
-impl<F: Float> GeneralIntegrator<F> for Model<F> {
-    fn update(&self, _t: F, x: &[F]) -> Result<Vec<F>> {
-        Ok(x.to_vec())
-    }
-}
-
 /// Results of integration
 #[derive(Clone)]
 struct Results<F: Float> {
-    /// The position of the third body
-    z: Vec<F>,
-    /// The velocity of the third body
-    z_v: Vec<F>,
-    /// MEGNO
-    megno: Vec<F>,
-    /// Mean MEGNO
-    mean_megno: Vec<F>,
+    /// The integrated trajectory (-ies)
+    x: integrators::Result<F>,
+    /// The integrated trajectories, MEGNOs and mean MEGNOs
+    m: integrators::Result<F>,
 }
 
 impl<F: Float> Results<F> {
-    /// Initialize result vectors
+    /// Initialize result matrices
     fn new() -> Self {
         Self {
-            z: Vec::<F>::new(),
-            z_v: Vec::<F>::new(),
-            megno: Vec::<F>::new(),
-            mean_megno: Vec::<F>::new(),
+            x: integrators::Result::<F>::new(0, 0),
+            m: integrators::Result::<F>::new(0, 0),
         }
     }
 }

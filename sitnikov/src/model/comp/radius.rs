@@ -1,5 +1,4 @@
-//! This module provides a method for
-//! computing the [radius](Model#method.radius)
+//! Provides the [`radius`](Model#method.radius) method
 
 use anyhow::{Context, Result};
 use numeric_literals::replace_float_literals;

@@ -12,12 +12,8 @@ macro_rules! prepare {
         /// * `token` --- Private token.
         #[replace_float_literals(F::from(literal).unwrap())]
         fn prepare(&self, x: Vec<F>, n: usize, _: &Token) -> Result<F> {
-            // Define the number of rows
-            let nrows = Dynamic::new(x.len());
-            // Define the number of columns
-            let ncols = Dynamic::new(n + 1);
             // Create a matrix for the solution
-            let mut result = Matrix::zeros_generic(nrows, ncols);
+            let mut result = Result::new(x.len(), n + 1);
             // Wrap the initial values in a column vector
             let x = DVector::from(x);
             // Put the initial values in the first row

@@ -35,11 +35,12 @@ impl Float for f64 {}
 type FloatMax = f64;
 
 /// Run the program
+#[doc(hidden)]
 fn main() -> Result<()> {
     // Parse the arguments
     let args = cli::parse();
     // Create a model
-    let mut model = model::Model::<f64>::from(&args);
+    let mut model = model::Model::<f64>::from(&args).with_context(|| "Couldn't create a model")?;
     // Integrate the model
     model
         .integrate()

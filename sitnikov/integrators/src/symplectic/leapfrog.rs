@@ -22,17 +22,13 @@ macro_rules! leapfrog {
         ) -> anyhow::Result<()> {
             // Get the initial state
             let mut x = result.initial_values();
-            // Compute the initial accelerations
-            let mut a = self
-                .accelerations(t_0, &x)
-                .with_context(|| "Couldn't compute the accelerations")?;
             // Integrate
             for i in 0..n {
                 // Compute the time moment
                 let t = t_0 + F::from(i).unwrap() * h;
                 // Compute the next state
-                (x, a) = self
-                    .leapfrog_once(t, &x, &a, h, token)
+                x = self
+                    .leapfrog_once(t, &x, h, token)
                     .with_context(|| "Couldn't compute the next state")?;
                 // Put the new state in the result
                 result.set_state(i + 1, x.clone());

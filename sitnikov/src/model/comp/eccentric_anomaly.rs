@@ -1,5 +1,4 @@
-//! This module provides a method for computing the
-//! [eccentric anomaly](Model#method.eccentric_anomaly)
+//! Provides the [`eccentric_anomaly`](Model#method.eccentric_anomaly) method
 
 use anyhow::{Context, Result};
 use numeric_literals::replace_float_literals;

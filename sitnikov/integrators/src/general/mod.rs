@@ -9,7 +9,7 @@ mod runge_kutta_4th;
 mod test_method;
 
 use anyhow::{self, Context};
-use nalgebra::{DVector, Dynamic, Matrix};
+use nalgebra::DVector;
 use numeric_literals::replace_float_literals;
 
 use crate::prepare::prepare;

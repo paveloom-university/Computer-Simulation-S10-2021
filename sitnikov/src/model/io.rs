@@ -1,3 +1,4 @@
-//! This module provides IO routines
+//! Provides IO methods
 
+mod from;
 mod write;

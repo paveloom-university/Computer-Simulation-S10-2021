@@ -10,22 +10,22 @@ macro_rules! integrate {
         /// * `t_0` --- Initial value of time;
         /// * `h` --- Time step;
         /// * `n` --- Number of iterations;
-        /// * `method` --- Integration method.
+        /// * `integrator` --- Integration method.
         #[replace_float_literals(F::from(literal).unwrap())]
         fn integrate(
             &self,
-            x: Vec<F>,
+            x: &[F],
             t_0: F,
             h: F,
             n: usize,
-            method: Integrators,
-        ) -> anyhow::Result<()> {
+            integrator: Integrators,
+        ) -> anyhow::Result<Result<F>> {
             // Get a token for using the private methods
             let token = Token {};
             // Prepare a result matrix
-            let mut result = self.prepare(x, n, &token);
+            let mut result = self.prepare(x.to_vec(), n, &token);
             // Call the specified method to perform integration
-            match method {
+            match integrator {
                 Integrators::RungeKutta4th => {
                     self.runge_kutta_4th(t_0, h, n, &mut result, &token)
                         .with_context(|| {
@@ -33,7 +33,7 @@ macro_rules! integrate {
                         })?;
                 }
             }
-            Ok(())
+            Ok((result))
         }
     };
 }

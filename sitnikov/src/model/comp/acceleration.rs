@@ -1,6 +1,4 @@
-//! This module provides a method for computing
-//! the [acceleration](Model#method.acceleration)
-//! (second derivative)
+//! Provides the [`acceleration`](Model#method.acceleration) method
 
 use anyhow::{Context, Result};
 use numeric_literals::replace_float_literals;
@@ -11,7 +9,7 @@ use crate::Float;
 impl<F: Float> Model<F> {
     /// Compute the acceleration (second derivative)
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub(super) fn acceleration(&self, t: F, z: F) -> Result<F> {
+    pub(in super::super) fn acceleration(&self, t: F, z: F) -> Result<F> {
         let r = self
             .radius(t)
             .with_context(|| "Couldn't compute the radius")?;

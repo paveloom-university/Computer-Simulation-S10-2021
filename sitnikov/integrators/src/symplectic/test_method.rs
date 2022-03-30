@@ -24,8 +24,12 @@ macro_rules! test_method {
             let test = Test {};
 
             // Define the integration parameters
-            let x = vec![1., 0.];
             let t_0 = 0.;
+            let p_0 = 1.;
+            let a = test
+                .accelerations(t_0, &[p_0])
+                .with_context(|| "Couldn't compute the acceleration")?;
+            let x = vec![p_0, 0., a[0]];
             let h = 1e-2;
             let n = 3000;
             let t = t_0 + h * n as f64;
