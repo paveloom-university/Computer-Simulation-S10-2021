@@ -5,6 +5,8 @@ use num::Float;
 use rand::prelude::*;
 use rand_distr::{Normal, StandardNormal};
 
+use std::fmt::Debug;
+
 use crate::{Bounds, Point};
 
 /// Method of getting a random neighbour
@@ -26,7 +28,7 @@ where
 
 impl<F, R, const N: usize> Method<F, R, N>
 where
-    F: Float,
+    F: Float + Debug,
     StandardNormal: Distribution<F>,
     R: Rng,
 {

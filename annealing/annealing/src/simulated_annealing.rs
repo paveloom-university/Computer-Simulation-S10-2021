@@ -17,7 +17,7 @@ use crate::{Bounds, NeighbourMethod, Point, Schedule, APF};
 /// Note that the minimum temperature must be reachable.
 pub struct SimulatedAnnealing<'a, F, R, const N: usize>
 where
-    F: Float,
+    F: Float + SampleUniform,
     StandardNormal: Distribution<F>,
     R: Rng,
 {
@@ -32,7 +32,7 @@ where
     /// Bounds of the parameter space
     bounds: &'a Bounds<F, N>,
     /// Acceptance probability function
-    apf: &'a APF,
+    apf: &'a APF<F, R>,
     /// Method of getting a random neighbour
     neighbour: &'a NeighbourMethod<F, R, N>,
     /// Annealing schedule

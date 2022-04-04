@@ -5,8 +5,14 @@ use numeric_literals::replace_float_literals;
 use rand::prelude::*;
 use rand_distr::{uniform::SampleUniform, Uniform};
 
+use std::fmt::Debug;
+
 /// Acceptance probability function
-pub enum APF {
+pub enum APF<F, R>
+where
+    F: Float + SampleUniform,
+    R: Rng,
+{
     /// Metropolis criterion:
     ///
     /// $
@@ -16,9 +22,17 @@ pub enum APF {
     /// \end{cases}
     /// $
     Metropolis,
+    /// Custom: choose your own!
+    Custom {
+        f: fn(diff: F, t: F, uni: &Uniform<F>, rng: &mut R) -> bool,
+    },
 }
 
-impl APF {
+impl<F, R> APF<F, R>
+where
+    F: Float + SampleUniform + Debug,
+    R: Rng,
+{
     /// Choose whether to accept the point
     ///
     /// Arguments:
@@ -27,13 +41,10 @@ impl APF {
     /// * `uni` -- Uniform[0, 1] distribution;
     /// * `rng` --- Random number generator.
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn accept<F, R>(&self, diff: F, t: F, uni: &Uniform<F>, rng: &mut R) -> bool
-    where
-        F: Float + SampleUniform,
-        R: Rng,
-    {
+    pub fn accept(&self, diff: F, t: F, uni: &Uniform<F>, rng: &mut R) -> bool {
         match self {
             APF::Metropolis => diff < 0. || uni.sample(rng) < F::min(F::exp(-diff / t), 1.),
+            APF::Custom { f } => f(diff, t, uni, rng),
         }
     }
 }

@@ -3,6 +3,8 @@
 use num::Float;
 use numeric_literals::replace_float_literals;
 
+use std::fmt::Debug;
+
 /// Annealing schedule
 pub enum Schedule<F: Float> {
     /// Logarithmic:
@@ -11,7 +13,7 @@ pub enum Schedule<F: Float> {
     Logarithmic,
     /// Exponential:
     ///
-    /// $ t^{(k+1)} = \gamma t^{(k)} $
+    /// $ t^{(k+1)} = \gamma t^{(k)} \\; \text{for} \\; \gamma \in (0, 1) $
     Exponential { gamma: F },
     /// Fast:
     ///
@@ -21,7 +23,7 @@ pub enum Schedule<F: Float> {
     Custom { f: fn(k: usize, t: F, t_0: F) -> F },
 }
 
-impl<F: Float> Schedule<F> {
+impl<F: Float + Debug> Schedule<F> {
     /// Lower the temperature
     ///
     /// Arguments:
