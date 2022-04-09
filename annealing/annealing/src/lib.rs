@@ -1,7 +1,6 @@
-//! This crate provides implementations of the
-//! [simulated annealing](https://en.wikipedia.org/wiki/Simulated_annealing) and the
-//! [adaptive simulated annealing](https://en.wikipedia.org/wiki/Adaptive_simulated_annealing)
-//! algorithms for approximating the global minimum of a given function.
+//! This crate provides an implementation of the
+//! [simulated annealing](https://en.wikipedia.org/wiki/Simulated_annealing)
+//! algorithm for approximating the global minimum of a given function.
 //!
 //! Choose the temperatures and the annealing schedule wisely:
 //! this is your way of controlling how long you will have to wait.
@@ -15,8 +14,6 @@
 #[doc(hidden)]
 mod apf;
 #[doc(hidden)]
-mod asa;
-#[doc(hidden)]
 mod neighbour;
 #[doc(hidden)]
 mod sa;
@@ -26,7 +23,6 @@ mod schedule;
 use std::ops::Range;
 
 pub use apf::APF;
-pub use asa::ASA;
 pub use neighbour::Method as NeighbourMethod;
 pub use sa::SA;
 pub use schedule::Schedule;
