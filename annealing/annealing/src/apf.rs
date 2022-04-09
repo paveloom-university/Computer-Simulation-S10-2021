@@ -43,7 +43,7 @@ where
     #[replace_float_literals(F::from(literal).unwrap())]
     pub fn accept(&self, diff: F, t: F, uni: &Uniform<F>, rng: &mut R) -> bool {
         match self {
-            APF::Metropolis => diff < 0. || uni.sample(rng) < F::min(F::exp(-diff / t), 1.),
+            APF::Metropolis => diff <= 0. || uni.sample(rng) < F::min(F::exp(-diff / t), 1.),
             APF::Custom { f } => f(diff, t, uni, rng),
         }
     }

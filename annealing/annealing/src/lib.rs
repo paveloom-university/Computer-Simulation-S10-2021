@@ -3,6 +3,10 @@
 //! [adaptive simulated annealing](https://en.wikipedia.org/wiki/Adaptive_simulated_annealing)
 //! algorithms for approximating the global minimum of a given function.
 //!
+//! Choose the temperatures and the annealing schedule wisely:
+//! this is your way of controlling how long you will have to wait.
+//! Note that the minimum temperature must be reachable.
+//!
 //! References:
 //! - Jason Brownlee, 2021, “[Simulated Annealing From Scratch in Python](https://machinelearningmastery.com/simulated-annealing-from-scratch-in-python/)”
 //! - Mykel J. Kochenderfer, Tim A. Wheeler, 2019, “[Algorithms for Optimization](https://www.amazon.com/dp/0262039427)”
@@ -11,21 +15,24 @@
 #[doc(hidden)]
 mod apf;
 #[doc(hidden)]
+mod asa;
+#[doc(hidden)]
 mod neighbour;
 #[doc(hidden)]
-mod schedule;
+mod sa;
 #[doc(hidden)]
-mod simulated_annealing;
+mod schedule;
 
 use std::ops::Range;
 
 pub use apf::APF;
+pub use asa::ASA;
 pub use neighbour::Method as NeighbourMethod;
+pub use sa::SA;
 pub use schedule::Schedule;
-pub use simulated_annealing::SimulatedAnnealing;
 
-/// A point in the parameter (argument) space
+/// A point in the parameter space
 pub type Point<F, const N: usize> = [F; N];
 
-/// Bounds of the parameter (argument) space
+/// Bounds of the parameter space
 pub type Bounds<F, const N: usize> = [Range<F>; N];
