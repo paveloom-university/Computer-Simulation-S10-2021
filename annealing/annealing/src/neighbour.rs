@@ -19,9 +19,13 @@ where
     /// Get a neighbour in the vicinity of the current point
     /// by sampling a random normal distribution with the mean
     /// in that point and with the provided standard deviation
-    Normal { sd: F },
+    Normal {
+        /// Standard deviation
+        sd: F,
+    },
     /// Custom: choose your own!
     Custom {
+        /// Custom function
         f: fn(p: &Point<F, N>, bounds: &Bounds<F, N>, rng: &mut R) -> Point<F, N>,
     },
 }

@@ -19,6 +19,8 @@ mod neighbour;
 mod sa;
 #[doc(hidden)]
 mod schedule;
+#[doc(hidden)]
+mod status;
 
 use std::ops::Range;
 
@@ -26,6 +28,7 @@ pub use apf::APF;
 pub use neighbour::Method as NeighbourMethod;
 pub use sa::SA;
 pub use schedule::Schedule;
+pub use status::Status;
 
 /// A point in the parameter space
 pub type Point<F, const N: usize> = [F; N];

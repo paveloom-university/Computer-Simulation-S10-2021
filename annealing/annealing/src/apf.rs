@@ -24,6 +24,7 @@ where
     Metropolis,
     /// Custom: choose your own!
     Custom {
+        /// Custom function
         f: fn(diff: F, t: F, uni: &Uniform<F>, rng: &mut R) -> bool,
     },
 }

@@ -8,12 +8,12 @@ use rand_distr::{uniform::SampleUniform, Distribution, StandardNormal, Uniform};
 
 use std::fmt::Debug;
 
-use crate::{Bounds, NeighbourMethod, Point, Schedule, APF};
+use crate::{Bounds, NeighbourMethod, Point, Schedule, Status, APF};
 
 /// Simulated annealing
 pub struct SA<'a, F, R, const N: usize>
 where
-    F: Float + SampleUniform,
+    F: Float + SampleUniform + Debug,
     StandardNormal: Distribution<F>,
     R: Rng,
 {
@@ -33,6 +33,8 @@ where
     neighbour: &'a NeighbourMethod<F, R, N>,
     /// Annealing schedule
     schedule: &'a Schedule<F>,
+    /// Status function
+    status: &'a Status<F, N>,
     /// Random number generator
     rng: &'a mut R,
 }
@@ -45,7 +47,7 @@ where
 {
     /// Find the global minimum (and the corresponding point) of the objective function
     #[replace_float_literals(F::from(literal).unwrap())]
-    pub fn minimum(&mut self) -> (F, Point<F, N>) {
+    pub fn findmin(&mut self) -> (F, Point<F, N>) {
         // Evaluate the objective function at the initial point and
         // save the initial values as the current working solution
         let mut p = *self.p_0;
@@ -83,6 +85,8 @@ where
             t = self.schedule.cool(k, t, self.t_0);
             // Update the iterations counter
             k += 1;
+            // Print the status
+            self.status.print(k, t, f, p, best_f, best_p);
         }
         (best_f, best_p)
     }
@@ -109,9 +113,10 @@ fn test() -> Result<()> {
         apf: &APF::Metropolis,
         neighbour: &NeighbourMethod::Normal { sd: 5. },
         schedule: &Schedule::Fast,
+        status: &Status::Periodic { nk: 1000 },
         rng: &mut rand_xoshiro::Xoshiro256PlusPlus::seed_from_u64(1),
     }
-    .minimum();
+    .findmin();
     // Compare the result with the actual minimum
     let actual_p = [22.790_580_66];
     let actual_m = f(&actual_p);

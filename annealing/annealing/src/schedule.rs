@@ -14,13 +14,19 @@ pub enum Schedule<F: Float> {
     /// Exponential:
     ///
     /// $ t^{(k+1)} = \gamma t^{(k)} \\; \text{for} \\; \gamma \in (0, 1) $
-    Exponential { gamma: F },
+    Exponential {
+        /// Exponential parameter $ \gamma $
+        gamma: F,
+    },
     /// Fast:
     ///
     /// $ t^{(k)} = t^{(1)} / k $
     Fast,
     /// Custom: choose your own!
-    Custom { f: fn(k: usize, t: F, t_0: F) -> F },
+    Custom {
+        /// Custom function
+        f: fn(k: usize, t: F, t_0: F) -> F,
+    },
 }
 
 impl<F: Float + Debug> Schedule<F> {
