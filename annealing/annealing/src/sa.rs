@@ -11,39 +11,41 @@ use std::fmt::Debug;
 use crate::{Bounds, NeighbourMethod, Point, Schedule, Status, APF};
 
 /// Simulated annealing
-pub struct SA<'a, F, R, const N: usize>
+pub struct SA<'a, F, R, FN, const N: usize>
 where
     F: Float + SampleUniform + Debug,
     StandardNormal: Distribution<F>,
     R: Rng,
+    FN: Fn(&Point<F, N>) -> F,
 {
     /// Objective function
-    f: fn(&Point<F, N>) -> F,
+    pub f: FN,
     /// Initial point
-    p_0: &'a Point<F, N>,
+    pub p_0: &'a Point<F, N>,
     /// Initial temperature
-    t_0: F,
+    pub t_0: F,
     /// Minimum temperature
-    t_min: F,
+    pub t_min: F,
     /// Bounds of the parameter space
-    bounds: &'a Bounds<F, N>,
+    pub bounds: &'a Bounds<F, N>,
     /// Acceptance probability function
-    apf: &'a APF<F, R>,
+    pub apf: &'a APF<F, R>,
     /// Method of getting a random neighbour
-    neighbour: &'a NeighbourMethod<F, R, N>,
+    pub neighbour: &'a NeighbourMethod<F, R, N>,
     /// Annealing schedule
-    schedule: &'a Schedule<F>,
+    pub schedule: &'a Schedule<F>,
     /// Status function
-    status: &'a Status<F, N>,
+    pub status: &'a Status<F, N>,
     /// Random number generator
-    rng: &'a mut R,
+    pub rng: &'a mut R,
 }
 
-impl<F, R, const N: usize> SA<'_, F, R, N>
+impl<F, R, FN, const N: usize> SA<'_, F, R, FN, N>
 where
     F: Float + SampleUniform + Debug,
     StandardNormal: Distribution<F>,
     R: Rng + SeedableRng,
+    FN: Fn(&Point<F, N>) -> F,
 {
     /// Find the global minimum (and the corresponding point) of the objective function
     #[replace_float_literals(F::from(literal).unwrap())]
