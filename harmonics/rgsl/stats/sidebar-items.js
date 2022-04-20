@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["max",""],["max_index",""],["min",""],["min_index",""],["pvariance",""],["stats_minmax","Returns `(min, max)`."],["stats_minmax_index","Returns `(min, max)`."],["ttest",""],["wabsdev",""],["wabsdev_m",""],["wkurtosis",""],["wkurtosis_m_sd",""],["wskew",""],["wskew_m_sd",""],["wtss",""],["wtss_m",""],["wvariance_m",""]]});

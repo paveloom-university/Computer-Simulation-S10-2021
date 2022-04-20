@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Multi dimensional Root-Finding"><meta name="keywords" content="rust, rustlang, rust-lang, multiroot"><title>rgsl::types::multiroot - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module multiroot</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#structs">Structs</a></li></ul></div></section><div id="sidebar-vars" data-name="multiroot" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rgsl/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../../index.html">rgsl</a>::<wbr><a href="../index.html">types</a>::<wbr><a class="mod" href="#">multiroot</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../../src/rgsl/types/multiroot.rs.html#5-344">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="multi-dimensional-root-finding"><a href="#multi-dimensional-root-finding">Multi dimensional Root-Finding</a></h2>
+<p>This chapter describes functions for multidimensional root-finding (solving nonlinear systems with
+n equations in n unknowns). The library provides low level components for a variety of iterative
+solvers and convergence tests. These can be combined by the user to achieve the desired solution,
+with full access to the intermediate steps of the iteration. Each class of methods uses the same
+framework, so that you can switch between solvers at runtime without needing to recompile your
+program. Each instance of a solver keeps track of its own state, allowing the solvers to be used
+in multi-threaded programs. The solvers are based on the original Fortran library MINPACK.
+The header file <code>gsl_multiroots.h</code> contains prototypes for the multidimensional root finding functions
+and related declarations.</p>
+<h3 id="overview"><a href="#overview">Overview</a></h3>
+<p>The problem of multidimensional root finding requires the simultaneous solution of n equations,
+f_i, in n variables, x_i,</p>
+<div class="example-wrap"><pre class="language-text"><code>f_i (x_1, \dots, x_n) = 0 \qquad\hbox{for}~i = 1 \dots n.</code></pre></div>
+<p>In general there are no bracketing methods available for n dimensional systems, and no way of
+knowing whether any solutions exist. All algorithms proceed from an initial guess using a
+variant of the Newton iteration,</p>
+<div class="example-wrap"><pre class="language-text"><code>x \to x&#39; = x - J^{-1} f(x)</code></pre></div>
+<p>where x, f are vector quantities and J is the Jacobian matrix J_{ij} = \partial f_i / \partial x_j.
+Additional strategies can be used to enlarge the region of convergence. These include requiring a
+decrease in the norm |f| on each step proposed by Newton’s method, or taking steepest-descent
+steps in the direction of the negative gradient of |f|.</p>
+<p>Several root-finding algorithms are available within a single framework. The user provides a
+high-level driver for the algorithms, and the library provides the individual functions necessary
+for each of the steps. There are three main phases of the iteration. The steps are,</p>
+<ul>
+<li>initialize solver state, <code>s</code>, for algorithm <code>T</code></li>
+<li>update <code>s</code> using the iteration <code>T</code></li>
+<li>test <code>s</code> for convergence, and repeat iteration if necessary</li>
+</ul>
+<p>The evaluation of the Jacobian matrix can be problematic, either because programming the derivatives
+is intractable or because computation of the n^2 terms of the matrix becomes too expensive.
+For these reasons the algorithms provided by the library are divided into two classes according to
+whether the derivatives are available or not.</p>
+<p>The state for solvers with an analytic Jacobian matrix is held in a <code>gsl_multiroot_fdfsolver</code> struct.
+The updating procedure requires both the function and its derivatives to be supplied by the user.</p>
+<p>The state for solvers which do not use an analytic Jacobian matrix is held in a
+<code>gsl_multiroot_fsolver</code> struct. The updating procedure uses only function evaluations (not derivatives).
+The algorithms estimate the matrix J or J^{-1} by approximate methods.
+!</p>
+</div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MultiRootFSolver.html" title="rgsl::types::multiroot::MultiRootFSolver struct">MultiRootFSolver</a></div><div class="item-right docblock-short"><p>This is a workspace for multidimensional root-finding without derivatives.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.MultiRootFSolverType.html" title="rgsl::types::multiroot::MultiRootFSolverType struct">MultiRootFSolverType</a></div><div class="item-right docblock-short"><p>The multiroot algorithms described in this section do not require any derivative information to be
+supplied by the user. Any derivatives needed are approximated by finite differences.
+Note that if the finite-differencing step size chosen by these routines is inappropriate,
+an explicit user-supplied numerical derivative can always be used with
+derivative-based algorithms.</p>
+</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rgsl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0 (7737e0b5c 2022-04-04)" ></div>
+</body></html>

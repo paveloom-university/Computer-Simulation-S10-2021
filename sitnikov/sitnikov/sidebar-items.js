@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["cli","This module defines the command-line interface of the program"],["model","This module provides a model of the Sitnikov problem"]],"trait":[["Float","A general trait for all floating point type numbers"]],"type":[["FloatMax","The biggest floating-point type with implemented [`Float`] trait"]]});

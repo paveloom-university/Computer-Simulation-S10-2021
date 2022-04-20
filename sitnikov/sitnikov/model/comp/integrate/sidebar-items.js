@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["variate","Get a small variation to the passed value"]]});

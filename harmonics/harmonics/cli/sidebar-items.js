@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["parse","Parse the arguments"]],"macro":[["validator","Create a validator for an argument"]],"struct":[["Args","Command-line interface arguments"]]});

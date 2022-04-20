@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["cli","Provides the command-line interface of the program"],["write","Provides the [`serialize_into`] function"]]});

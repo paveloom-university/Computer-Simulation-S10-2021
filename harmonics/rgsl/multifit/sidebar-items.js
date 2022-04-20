@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["covar","Compute the covariance matrix cov = inv (J^T J) by QRP^T decomposition of J"],["gradient",""],["linear_Lk",""],["linear_lcorner","Returns `(Value, idx)`."],["linear_lcorner2","Returns `(Value, idx)`."],["linear_lreg",""],["test_delta",""]]});

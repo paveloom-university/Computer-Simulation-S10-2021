@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="25 Simulated Annealing"><meta name="keywords" content="rust, rustlang, rust-lang, siman"><title>rgsl::types::siman - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module siman</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#structs">Structs</a></li></ul></div></section><div id="sidebar-vars" data-name="siman" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rgsl/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../../index.html">rgsl</a>::<wbr><a href="../index.html">types</a>::<wbr><a class="mod" href="#">siman</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../../src/rgsl/types/siman.rs.html#5-528">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="25-simulated-annealing"><a href="#25-simulated-annealing">25 Simulated Annealing</a></h2>
+<p>Stochastic search techniques are used when the structure of a space is not well understood or
+is not smooth, so that techniques like Newton’s method (which requires calculating Jacobian
+derivative matrices) cannot be used. In particular, these techniques are frequently used to
+solve combinatorial optimization problems, such as the traveling salesman problem.</p>
+<p>The goal is to find a point in the space at which a real valued energy function (or cost
+function) is minimized. Simulated annealing is a minimization technique which has given
+good results in avoiding local minima; it is based on the idea of taking a random walk
+through the space at successively lower temperatures, where the probability of taking a
+step is given by a Boltzmann distribution.</p>
+<p>The functions described in this chapter are declared in the header file gsl_siman.h.</p>
+<h3 id="simulated-annealing-algorithm"><a href="#simulated-annealing-algorithm">Simulated Annealing algorithm</a></h3>
+<p>The simulated annealing algorithm takes random walks through the problem space, looking
+for points with low energies; in these random walks, the probability of taking a step is
+determined by the Boltzmann distribution,</p>
+<blockquote>
+<p>p = e −(E i+1 −E i )/(kT )
+if E i+1 &gt; E i , and p = 1 when E i+1 ≤ E i</p>
+</blockquote>
+<p>In other words, a step will occur if the new energy is lower. If the new energy is higher,
+the transition can still occur, and its likelihood is proportional to the temperature T and
+inversely proportional to the energy difference E i+1 − E i .</p>
+<p>The temperature T is initially set to a high value, and a random walk is carried out
+at that temperature. Then the temperature is lowered very slightly according to a cooling
+schedule, for example: T → T /μ T where μ T is slightly greater than 1.</p>
+<p>The slight probability of taking a step that gives higher energy is what allows simulated
+annealing to frequently get out of local minima.
+!</p>
+</div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SimAnnealing.html" title="rgsl::types::siman::SimAnnealing struct">SimAnnealing</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SimAnnealingParams.html" title="rgsl::types::siman::SimAnnealingParams struct">SimAnnealingParams</a></div><div class="item-right docblock-short"></div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rgsl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0 (7737e0b5c 2022-04-04)" ></div>
+</body></html>

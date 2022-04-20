@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Token","This struct is used as a type of pseudo-arguments defined for some of the methods. The reasoning is simple: forbid reimplementation of those methods"]]});

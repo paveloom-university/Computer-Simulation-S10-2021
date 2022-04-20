@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["landau_pdf","This function computes the probability density p(x) at x for the Landau distribution using an approximation to the formula given above."]]});

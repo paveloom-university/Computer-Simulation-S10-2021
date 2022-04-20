@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["logarithmic_pdf","This function computes the probability p(k) of obtaining k from a logarithmic distribution with probability parameter p, using the formula given above."]]});

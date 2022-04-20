@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["bernoulli_pdf","This function computes the probability p(k) of obtaining k from a Bernoulli distribution with probability parameter p, using the formula given above."]]});

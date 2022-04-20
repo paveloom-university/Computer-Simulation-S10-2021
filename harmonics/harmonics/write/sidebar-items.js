@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["serialize_into","Serialize the vector into the file"]]});

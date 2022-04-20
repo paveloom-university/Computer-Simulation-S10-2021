@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["multinomial_lnpdf","This function returns the logarithm of the probability for the multinomial distribution P(n_1, n_2, …, n_K) with parameters `p[K]`."],["multinomial_pdf","This function computes the probability P(n_1, n_2, …, n_K) of sampling `n[K]` from a multinomial distribution with parameters `p[K]`, using the formula given above."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Interp",""],["InterpAccel","Evaluation accelerator."],["InterpType",""],["Spline","General interpolation object."]]});

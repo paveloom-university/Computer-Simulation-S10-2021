@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["sitnikov"] = [{"text":"impl&lt;F:&nbsp;<a class=\"trait\" href=\"sitnikov/trait.Float.html\" title=\"trait sitnikov::Float\">Float</a>&gt; <a class=\"trait\" href=\"integrators/symplectic/trait.Integrator.html\" title=\"trait integrators::symplectic::Integrator\">Integrator</a>&lt;F&gt; for <a class=\"struct\" href=\"sitnikov/model/struct.Model.html\" title=\"struct sitnikov::model::Model\">Model</a>&lt;F&gt;","synthetic":false,"types":["sitnikov::model::Model"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

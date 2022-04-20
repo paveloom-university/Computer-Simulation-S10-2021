@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="B-splines are commonly used as basis functions to fit smoothing curves to large data sets. To do this, the abscissa axis is broken up into some number of intervals, where the endpoints of each interval are called breakpoints."><meta name="keywords" content="rust, rustlang, rust-lang, basis_spline"><title>rgsl::types::basis_spline - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module basis_spline</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#structs">Structs</a></li></ul></div></section><div id="sidebar-vars" data-name="basis_spline" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../rgsl/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../../index.html">rgsl</a>::<wbr><a href="../index.html">types</a>::<wbr><a class="mod" href="#">basis_spline</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../../src/rgsl/types/basis_spline.rs.html#5-156">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>B-splines are commonly used as basis functions to fit smoothing curves to large data sets.
+To do this, the abscissa axis is broken up into some number of intervals, where the endpoints of
+each interval are called breakpoints.</p>
+<p>These breakpoints are then converted to knots by imposing various continuity and smoothness
+conditions at each interface. Given a nondecreasing knot vector t = {t_0, t_1, …, t_{n+k-1}}, the n
+basis splines of order k are defined by</p>
+<div class="example-wrap"><pre class="language-latex"><code>B_(i,1)(x) = (1, t_i &lt;= x &lt; t_(i+1)
+
+             (0, else
+
+B_(i,k)(x) = [(x - t_i)/(t_(i+k-1) - t_i)] B_(i,k-1)(x)
+
+              + [(t_(i+k) - x)/(t_(i+k) - t_(i+1))] B_(i+1,k-1)(x)</code></pre></div>
+<p>for i = 0, …, n-1. The common case of cubic B-splines is given by k = 4. The above recurrence
+relation can be evaluated in a numerically stable way by the de Boor algorithm.</p>
+<p>If we define appropriate knots on an interval [a,b] then the B-spline basis functions form a
+complete set on that interval. Therefore we can expand a smoothing function as</p>
+<p>f(x) = \sum_i c_i B_(i,k)(x)</p>
+<p>given enough (x_j, f(x_j)) data pairs. The coefficients c_i can be readily obtained from a
+least-squares fit.</p>
+<h4 id="references-and-further-reading"><a href="#references-and-further-reading">References and Further Reading</a></h4>
+<p>Further information on the algorithms described in this section can be found in the following book,</p>
+<p>C. de Boor, A Practical Guide to Splines (1978), Springer-Verlag, ISBN 0-387-90356-9.
+Further information of Greville abscissae and B-spline collocation can be found in the following
+paper,</p>
+<p>Richard W. Johnson, Higher order B-spline collocation at the Greville abscissae. Applied Numerical
+Mathematics. vol. 52, 2005, 63–75.</p>
+<p>A large collection of B-spline routines is available in the PPPACK library available at
+http://www.netlib.org/pppack, which is also part of SLATEC.
+!</p>
+</div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.BSpLineWorkspace.html" title="rgsl::types::basis_spline::BSpLineWorkspace struct">BSpLineWorkspace</a></div><div class="item-right docblock-short"></div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="rgsl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0 (7737e0b5c 2022-04-04)" ></div>
+</body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Fast Fourier Transforms (FFTs)"><meta name="keywords" content="rust, rustlang, rust-lang, fft"><title>rgsl::fft - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../rgsl/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Module fft</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#modules">Modules</a></li></ul></div></section><div id="sidebar-vars" data-name="fft" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rgsl/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">rgsl</a>::<wbr><a class="mod" href="#">fft</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/rgsl/fft.rs.html#5-329">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="fast-fourier-transforms-ffts"><a href="#fast-fourier-transforms-ffts">Fast Fourier Transforms (FFTs)</a></h2>
+<p>This chapter describes functions for performing Fast Fourier Transforms (FFTs). The library includes radix-2 routines (for lengths which are
+a power of two) and mixed-radix routines (which work for any length). For efficiency there are separate versions of the routines for real data
+and for complex data. The mixed-radix routines are a reimplementation of the FFTPACK library of Paul Swarztrauber. Fortran code for FFTPACK
+is available on Netlib (FFTPACK also includes some routines for sine and cosine transforms but these are currently not available in GSL). For
+details and derivations of the underlying algorithms consult the document GSL FFT Algorithms (see FFT References and Further Reading)</p>
+<h3 id="mathematical-definitions"><a href="#mathematical-definitions">Mathematical Definitions</a></h3>
+<p>Fast Fourier Transforms are efficient algorithms for calculating the discrete Fourier transform (DFT),</p>
+<p>x_j = \sum_{k=0}^{n-1} z_k \exp(-2\pi i j k / n)</p>
+<p>The DFT usually arises as an approximation to the continuous Fourier transform when functions are sampled at discrete intervals in space or time.
+The naive evaluation of the discrete Fourier transform is a matrix-vector multiplication W\vec{z}. A general matrix-vector multiplication takes
+O(n^2) operations for n data-points. Fast Fourier transform algorithms use a divide-and-conquer strategy to factorize the matrix W into smaller
+sub-matrices, corresponding to the integer factors of the length n. If n can be factorized into a product of integers f_1 f_2 … f_m then the
+DFT can be computed in O(n \sum f_i) operations. For a radix-2 FFT this gives an operation count of O(n \log_2 n).</p>
+<p>All the FFT functions offer three types of transform: forwards, inverse and backwards, based on the same mathematical definitions. The definition
+of the forward Fourier transform, x = FFT(z), is,</p>
+<p>x_j = \sum_{k=0}^{n-1} z_k \exp(-2\pi i j k / n)</p>
+<p>and the definition of the inverse Fourier transform, x = IFFT(z), is,</p>
+<p>z_j = {1 \over n} \sum_{k=0}^{n-1} x_k \exp(2\pi i j k / n).
+The factor of 1/n makes this a true inverse. For example, a call to gsl_fft_complex_forward followed by a call to gsl_fft_complex_inverse should
+return the original data (within numerical errors).</p>
+<p>In general there are two possible choices for the sign of the exponential in the transform/ inverse-transform pair. GSL follows the same convention
+as FFTPACK, using a negative exponential for the forward transform. The advantage of this convention is that the inverse transform recreates the
+original function with simple Fourier synthesis. Numerical Recipes uses the opposite convention, a positive exponential in the forward transform.</p>
+<p>The backwards FFT is simply our terminology for an unscaled version of the inverse FFT,</p>
+<p>z^{backwards}<em>j = \sum</em>{k=0}^{n-1} x_k \exp(2\pi i j k / n).</p>
+<p>When the overall scale of the result is unimportant it is often convenient to use the backwards FFT instead of the inverse to save unnecessary
+divisions.</p>
+<h3 id="overview-of-complex-data-ffts"><a href="#overview-of-complex-data-ffts">Overview of complex data FFTs</a></h3>
+<p>The inputs and outputs for the complex FFT routines are packed arrays of floating point numbers. In a packed array the real and imaginary parts
+of each complex number are placed in alternate neighboring elements. For example, the following definition of a packed array of length 6,</p>
+<div class="example-wrap"><pre class="language-C"><code>double x[3*2];
+gsl_complex_packed_array data = x;
+// can be used to hold an array of three complex numbers, z[3], in the following way,
+
+data[0] = Re(z[0])
+data[1] = Im(z[0])
+data[2] = Re(z[1])
+data[3] = Im(z[1])
+data[4] = Re(z[2])
+data[5] = Im(z[2])</code></pre></div>
+<p>The array indices for the data have the same ordering as those in the definition of the DFT—i.e. there are no index transformations or
+permutations of the data.</p>
+<p>A stride parameter allows the user to perform transforms on the elements <code>z[stride*i]</code> instead of <code>z[i]</code>. A stride greater than 1 can be used
+to take an in-place FFT of the column of a matrix. A stride of 1 accesses the array without any additional spacing between elements.</p>
+<p>To perform an FFT on a vector argument, such as gsl_vector_complex * v, use the following definitions (or their equivalents) when calling
+the functions described in this chapter:</p>
+<p>gsl_complex_packed_array data = v-&gt;data;
+size_t stride = v-&gt;stride;
+size_t n = v-&gt;size;
+For physical applications it is important to remember that the index appearing in the DFT does not correspond directly to a physical frequency.
+If the time-step of the DFT is \Delta then the frequency-domain includes both positive and negative frequencies, ranging from -1/(2\Delta)
+through 0 to +1/(2\Delta). The positive frequencies are stored from the beginning of the array up to the middle, and the negative frequencies
+are stored backwards from the end of the array.</p>
+<p>Here is a table which shows the layout of the array data, and the correspondence between the time-domain data z, and the frequency-domain
+data x.</p>
+<p>index    z               x = FFT(z)</p>
+<p>0        z(t = 0)        x(f = 0)
+1        z(t = 1)        x(f = 1/(n Delta))
+2        z(t = 2)        x(f = 2/(n Delta))
+.        ……..        ………………
+n/2      z(t = n/2)      x(f = +1/(2 Delta),
+-1/(2 Delta))
+.        ……..        ………………
+n-3      z(t = n-3)      x(f = -3/(n Delta))
+n-2      z(t = n-2)      x(f = -2/(n Delta))
+n-1      z(t = n-1)      x(f = -1/(n Delta))</p>
+<p>When n is even the location n/2 contains the most positive and negative frequencies (+1/(2 \Delta), -1/(2 \Delta)) which are equivalent. If
+n is odd then general structure of the table above still applies, but n/2 does not appear.</p>
+<h2 id="radix-2-fft-routines-for-complex-data"><a href="#radix-2-fft-routines-for-complex-data">Radix-2 FFT routines for complex data</a></h2>
+<p>The radix-2 algorithms described in this section are simple and compact, although not necessarily the most efficient. They use the Cooley-Tukey
+algorithm to compute in-place complex FFTs for lengths which are a power of 2—no additional storage is required. The corresponding self-sorting
+mixed-radix routines offer better performance at the expense of requiring additional working space.</p>
+<h3 id="mixed-radix-fft-routines-for-complex-data"><a href="#mixed-radix-fft-routines-for-complex-data">Mixed-radix FFT routines for complex data</a></h3>
+<p>This section describes mixed-radix FFT algorithms for complex data. The mixed-radix functions work for FFTs of any length. They are a
+reimplementation of Paul Swarztrauber’s Fortran FFTPACK library. The theory is explained in the review article Self-sorting Mixed-radix FFTs
+by Clive Temperton. The routines here use the same indexing scheme and basic algorithms as FFTPACK.</p>
+<p>The mixed-radix algorithm is based on sub-transform modules—highly optimized small length FFTs which are combined to create larger FFTs. There
+are efficient modules for factors of 2, 3, 4, 5, 6 and 7. The modules for the composite factors of 4 and 6 are faster than combining the modules
+for 2<em>2 and 2</em>3.</p>
+<p>For factors which are not implemented as modules there is a fall-back to a general length-n module which uses Singleton’s method for efficiently
+computing a DFT. This module is O(n^2), and slower than a dedicated module would be but works for any length n. Of course, lengths which use the
+general length-n module will still be factorized as much as possible. For example, a length of 143 will be factorized into 11<em>13. Large prime
+factors are the worst case scenario, e.g. as found in n=2</em>3*99991, and should be avoided because their O(n^2) scaling will dominate the run-time
+(consult the document GSL FFT Algorithms included in the GSL distribution if you encounter this problem).</p>
+<p>The mixed-radix initialization function gsl_fft_complex_wavetable_alloc returns the list of factors chosen by the library for a given length n.
+It can be used to check how well the length has been factorized, and estimate the run-time. To a first approximation the run-time scales as
+n \sum f_i, where the f_i are the factors of n. For programs under user control you may wish to issue a warning that the transform will be slow
+when the length is poorly factorized. If you frequently encounter data lengths which cannot be factorized using the existing small-prime modules
+consult GSL FFT Algorithms for details on adding support for other factors.</p>
+<h3 id="overview-of-real-data-ffts"><a href="#overview-of-real-data-ffts">Overview of real data FFTs</a></h3>
+<p>The functions for real data are similar to those for complex data. However, there is an important difference between forward and inverse transforms.
+The Fourier transform of a real sequence is not real. It is a complex sequence with a special symmetry:</p>
+<p>z_k = z_{n-k}^*</p>
+<p>A sequence with this symmetry is called conjugate-complex or half-complex. This different structure requires different storage layouts for the
+forward transform (from real to half-complex) and inverse transform (from half-complex back to real). As a consequence the routines are divided
+into two sets: functions in gsl_fft_real which operate on real sequences and functions in gsl_fft_halfcomplex which operate on half-complex sequences.</p>
+<p>Functions in gsl_fft_real compute the frequency coefficients of a real sequence. The half-complex coefficients c of a real sequence x are given
+by Fourier analysis,</p>
+<p>c_k = \sum_{j=0}^{n-1} x_j \exp(-2 \pi i j k /n)</p>
+<p>Functions in gsl_fft_halfcomplex compute inverse or backwards transforms. They reconstruct real sequences by Fourier synthesis from their half-complex
+frequency coefficients, c,</p>
+<p>x_j = {1 \over n} \sum_{k=0}^{n-1} c_k \exp(2 \pi i j k /n)</p>
+<p>The symmetry of the half-complex sequence implies that only half of the complex numbers in the output need to be stored. The remaining half can be
+reconstructed using the half-complex symmetry condition. This works for all lengths, even and odd—when the length is even the middle value where k=n/2
+is also real. Thus only n real numbers are required to store the half-complex sequence, and the transform of a real sequence can be stored in the
+same size array as the original data.</p>
+<p>The precise storage arrangements depend on the algorithm, and are different for radix-2 and mixed-radix routines. The radix-2 function operates
+in-place, which constrains the locations where each element can be stored. The restriction forces real and imaginary parts to be stored far apart.
+The mixed-radix algorithm does not have this restriction, and it stores the real and imaginary parts of a given term in neighboring locations (which
+is desirable for better locality of memory accesses).
+!</p>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="radix2/index.html" title="rgsl::fft::radix2 mod">radix2</a></div><div class="item-right docblock-short"><p>These functions compute forward, backward and inverse FFTs of length n with stride stride, on the packed complex array data using an in-place radix-2
+decimation-in-time algorithm. The length of the transform is restricted to powers of two. For the transform version of the function
+the sign argument can be either forward (-1) or backward (+1).</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="real_radix2/index.html" title="rgsl::fft::real_radix2 mod">real_radix2</a></div><div class="item-right docblock-short"><p>This section describes radix-2 FFT algorithms for real data. They use the Cooley-Tukey algorithm to compute in-place FFTs for lengths which
+are a power of 2.</p>
+</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rgsl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0 (7737e0b5c 2022-04-04)" ></div>
+</body></html>

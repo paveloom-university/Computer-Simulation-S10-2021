@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["acceleration","Provides the `acceleration` method"],["eccentric_anomaly","Provides the `eccentric_anomaly` method"],["integrate","Provides the `integrate` method"],["newton_raphson","Provides the [`newton_raphson`] routine"],["radius","Provides the `radius` method"]]});

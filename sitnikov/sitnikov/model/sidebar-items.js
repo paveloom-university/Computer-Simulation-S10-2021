@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["comp","Provides computation methods"],["io","Provides IO methods"]],"struct":[["Model","A model of the Sitnikov problem"],["Results","Results of integration"]]});

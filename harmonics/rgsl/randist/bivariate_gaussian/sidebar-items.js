@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["gaussian_pdf","This function computes the probability density p(x,y) at (x,y) for a bivariate Gaussian distribution with standard deviations sigma_x, sigma_y and correlation coefficient rho, using the formula given above."]]});
