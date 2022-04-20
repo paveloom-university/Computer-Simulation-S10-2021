@@ -28,9 +28,9 @@ pub use apf::APF;
 pub use neighbour::Method as NeighbourMethod;
 pub use sa::SA;
 pub use schedule::Schedule;
-pub use status::Status;
+pub use status::{Custom as CustomStatus, Status};
 
-/// A point in the parameter space
+/// Point in the parameter space
 pub type Point<F, const N: usize> = [F; N];
 
 /// Bounds of the parameter space

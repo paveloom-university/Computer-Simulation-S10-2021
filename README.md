@@ -10,8 +10,8 @@ Repository:
 References:
 - [sitnikov](sitnikov) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/sitnikov/sitnikov)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/sitnikov/sitnikov)]: Simulating the Sitnikov problem
   - [integrators](sitnikov/integrators) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/sitnikov/integrators)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/sitnikov/integrators)]: Providing an interface for integrating a system of 1st-order ODEs
-- [annealing-test](annealing) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/annealing/annealing_test)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/annealing/annealing_test)]: Testing the simulated annealing algorithm
-  - [annealing](annealing/annealing) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/annealing/annealing)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/annealing/annealing)]: Providing an interface for global optimization using simulated annealing
+- [harmonics](harmonics) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/harmonics/harmonics)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/harmonics/harmonics)]: Testing the simulated annealing algorithm on a linear combination of spherical harmonics
+  - [annealing](harmonics/annealing) [[GH](https://paveloom-university.github.io/Computer-Simulation-S10-2022/harmonics/annealing)] [[GL](https://paveloom-g.gitlab.io/university/s10-2022/computer-simulation/harmonics/annealing)]: Providing an interface for global optimization using simulated annealing
 
 #### Rust
 

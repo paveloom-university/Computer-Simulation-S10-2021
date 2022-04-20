@@ -11,12 +11,12 @@ use std::fmt::Debug;
 use crate::{Bounds, NeighbourMethod, Point, Schedule, Status, APF};
 
 /// Simulated annealing
-pub struct SA<'a, F, R, FN, const N: usize>
+pub struct SA<'a, 'b, F, R, FN, const N: usize>
 where
     F: Float + SampleUniform + Debug,
     StandardNormal: Distribution<F>,
     R: Rng,
-    FN: Fn(&Point<F, N>) -> F,
+    FN: FnMut(&Point<F, N>) -> F,
 {
     /// Objective function
     pub f: FN,
@@ -35,17 +35,17 @@ where
     /// Annealing schedule
     pub schedule: &'a Schedule<F>,
     /// Status function
-    pub status: &'a Status<F, N>,
+    pub status: &'a mut Status<'b, F, N>,
     /// Random number generator
     pub rng: &'a mut R,
 }
 
-impl<F, R, FN, const N: usize> SA<'_, F, R, FN, N>
+impl<F, R, FN, const N: usize> SA<'_, '_, F, R, FN, N>
 where
     F: Float + SampleUniform + Debug,
     StandardNormal: Distribution<F>,
     R: Rng + SeedableRng,
-    FN: Fn(&Point<F, N>) -> F,
+    FN: FnMut(&Point<F, N>) -> F,
 {
     /// Find the global minimum (and the corresponding point) of the objective function
     #[replace_float_literals(F::from(literal).unwrap())]
@@ -85,10 +85,10 @@ where
             }
             // Lower the temperature
             t = self.schedule.cool(k, t, self.t_0);
-            // Update the iterations counter
-            k += 1;
             // Print the status
             self.status.print(k, t, f, p, best_f, best_p);
+            // Update the iterations counter
+            k += 1;
         }
         (best_f, best_p)
     }
@@ -115,7 +115,7 @@ fn test() -> Result<()> {
         apf: &APF::Metropolis,
         neighbour: &NeighbourMethod::Normal { sd: 5. },
         schedule: &Schedule::Fast,
-        status: &Status::Periodic { nk: 1000 },
+        status: &mut Status::Periodic { nk: 1000 },
         rng: &mut rand_xoshiro::Xoshiro256PlusPlus::seed_from_u64(1),
     }
     .findmin();
